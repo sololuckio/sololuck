@@ -47,6 +47,12 @@ in [`deploy/`](deploy/).
 | `SOLOLUCK_POOL_HISTORY` | `/opt/coregrid-pool-public/pool_history.json` | where the 24h pool-hashrate ring is persisted |
 | `SOLOLUCK_ADDR_HISTORY` | `/opt/coregrid-pool-public/addr_history.json` | where the bounded per-address 24h history is persisted |
 
+## Tools
+
+- [`tools/pool-latency.py`](tools/pool-latency.py) — measure **your own** latency to solo pools from wherever the
+  miner lives: six spaced TCP connects plus one real stratum `mining.subscribe` per pool, TLS included. Standard
+  library only; add any pool with `host:port`. Latency changes stale shares and reconnects, never your odds of a block.
+
 ## What it deliberately does NOT expose
 
 This is the *public* front-end. It carries no operator payout address, no admin dashboard data, no
