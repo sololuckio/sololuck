@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""pool-latency.py — measure YOUR latency to solo-mining pools, from wherever the miner will live.
+"""pool-latency.py - measure YOUR latency to solo-mining pools, from wherever the miner will live.
 
 What it measures, per pool:
   tcp_ms   median time to open a TCP connection (one network round trip)
   sub_ms   time for a real stratum "mining.subscribe" handshake on a fresh
-           connection — connect + the pool's answer, i.e. what a miner waits for
+           connection - connect + the pool's answer, i.e. what a miner waits for
   tls      for TLS ports: connect + TLS handshake + subscribe
 
 Honest notes:
