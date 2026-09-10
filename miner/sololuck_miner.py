@@ -46,7 +46,7 @@ ENGINE_DIR_NAME = "SoloLuckMiner-engine"
 # line, so this is 1.11.1 — not 1.11.0, which the betas already sort inside.
 # Every v1.10.1 user auto-downloads and auto-installs this while idle, so
 # nothing unfinished may ride in it.
-APP_VERSION = "1.11.3"
+APP_VERSION = "1.11.4"
 CHANGELOG_URL = "https://sololuck.io/changelog"
 # ── coins ────────────────────────────────────────────────────────────────────
 # ONE Windows app with a coin selector (Bitcoin, Bitcoin Cash, DigiByte).
@@ -201,7 +201,11 @@ DOOR_MARGIN_PCT    = 0.15
 DOOR_MARGIN_MS     = 10.0
 
 _door_lock  = threading.Lock()
-_door_state = {"done": False, "results": [], "host": None, "picked": None}
+# "pinned" is the failover's answer: where the app is ACTUALLY mining now,
+# which outranks whatever the launch measurement picked. None until a pool stops
+# answering. ⛔ Only ever set for a coin that HAS doors — see pin_door().
+_door_state = {"done": False, "results": [], "host": None, "picked": None,
+               "pinned": None}
 
 
 def probe_door(host, port, attempts=DOOR_ATTEMPTS):
@@ -350,6 +354,13 @@ def resolve_host(chain, wait=0.0):
     fallback = c["host"]
     if not c.get("doors"):
         return fallback
+    # ⭐ A failover pin outranks the launch measurement: it is where the engine
+    # is pointed RIGHT NOW, and nothing on screen may disagree with that.
+    # ⛔ Unreachable for a single-pool coin — the return just above already sent
+    # Bitcoin Cash and DigiByte home with their own host.
+    pin = door_state().get("pinned")
+    if pin and pin.get("chain") == chain:
+        return pin["host"]
     if wait > 0:
         end = time.perf_counter() + wait
         while time.perf_counter() < end:
@@ -366,6 +377,14 @@ def resolve_host(chain, wait=0.0):
 def door_summary(chain="btc"):
     """One short line for the UI: which door won and what both measured."""
     st = door_state()
+    # ⭐ Same rule as resolve_host(): this line sits beside the endpoint on
+    # screen, so it must never name a pool the app has already left.
+    pin = st.get("pinned")
+    if pin and pin.get("chain") == chain:
+        if pin.get("from"):
+            return ("%s pool · the %s pool stopped answering"
+                    % (pin["label"], pin["from"]))
+        return "%s pool" % pin["label"]
     if not st["done"]:
         return "checking latency…"
     rows = st["results"]
@@ -377,6 +396,105 @@ def door_summary(chain="btc"):
               for r in rows if r is not win]
     tail = (" (%s)" % ", ".join(others)) if others else ""
     return "%s · %.0f ms%s" % (win["label"], win["ms"], tail)
+
+
+# ── failing over to the other pool ────────────────────────────────────────────
+# The launch check picks a pool ONCE, and cpuminer-opt takes a single -o URL and
+# retries it forever. Until this, a pool that went down mid-session left the app
+# showing "● reconnecting…" and the user submitting nothing, silently, for as
+# long as they left it running. With two Bitcoin pools there is somewhere to go.
+#
+# ⛔ Bitcoin only, structurally: every function below starts from
+# CHAINS[chain]["doors"], and Bitcoin Cash and DigiByte carry no "doors" key at
+# all. There is no reachable failover path for a coin with one pool, and there
+# must not be — its only "other" endpoint would be another chain's.
+#
+# 🔴 A blip must never move anyone. The move needs BOTH 90 unbroken seconds of
+# failure — the same signal that puts "reconnecting…" on screen — AND no share
+# accepted inside that window. The caller then has to PROVE the other pool is
+# alive with probe_door() before anything is restarted.
+FAILOVER_AFTER_S     = 90.0   # unbroken seconds of failure before we look elsewhere
+FAILOVER_PROBE_TRIES = 2      # the launch probe times a pool; this only asks yes/no
+# ⛔ THE ANTI-PING-PONG CAP: at most this many automatic moves per Start.
+# Two pools, so two moves is the whole useful space — the first reaches the other
+# pool, the second returns to the original in case it recovered while the second
+# died. A third could only be the beginning of a loop: with both pools flapping
+# the app would restart the engine every 90 s forever, throwing away the work in
+# flight each time and never actually mining. At the cap the app says so once and
+# then behaves exactly as it did before this feature existed — it stays put and
+# lets the engine keep retrying. Only a USER Start clears the count.
+FAILOVER_MAX_SWITCHES = 2
+
+
+def other_door(chain, host):
+    """The pool to move to when `host` stops answering — (host, label) or None.
+
+    ⛔ None for a coin with no "doors" (Bitcoin Cash, DigiByte), and None for a
+    host that is not one of THIS coin's own pools, so a failover can never invent
+    an endpoint or reach another chain."""
+    c = CHAINS.get(chain) or CHAIN_DEFS.get(chain) or {}
+    doors = c.get("doors")
+    if not doors or len(doors) < 2:
+        return None
+    hosts = [h for h, _label in doors]
+    if host not in hosts:
+        return None
+    # With two pools this is simply "the other one". Written as the next one
+    # round so a third pool would rotate rather than need new code.
+    i = (hosts.index(host) + 1) % len(doors)
+    return (doors[i][0], doors[i][1])
+
+
+def door_label(chain, host):
+    """What the user calls this pool ("Asia", "US"). The host itself if unknown.
+
+    ⭐ On screen it is always a "pool"; "door" is our word, never theirs."""
+    c = CHAINS.get(chain) or CHAIN_DEFS.get(chain) or {}
+    for h, label in (c.get("doors") or ()):
+        if h == host:
+            return label
+    return host
+
+
+def failover_due(fail_since, last_accept, now, after=FAILOVER_AFTER_S):
+    """Has this pool been failing long enough to be worth leaving?
+
+    `fail_since` is when the current UNBROKEN run of failure began, and is None
+    the moment the engine shows any sign of talking to the pool again — so one
+    dropped line resets it and can never move anyone. `last_accept` is the last
+    accepted share (the Start time when there has not been one yet): a pool still
+    taking shares is not down, however noisy its log is."""
+    if fail_since is None:
+        return False
+    return (now - fail_since) >= after and (now - last_accept) >= after
+
+
+def failover_plan(chain, host, switches, fail_since, last_accept, now):
+    """Where to move, or None to stay put. Pure decision — no sockets, no UI.
+
+    🔴 The caller must still prove the answer is alive with probe_door() before
+    acting on it; moving to a second dead pool helps nobody."""
+    if switches >= FAILOVER_MAX_SWITCHES:
+        return None                       # ⛔ the cap: stay put and keep retrying
+    if not failover_due(fail_since, last_accept, now):
+        return None
+    return other_door(chain, host)
+
+
+def pin_door(chain, host, label, left=None):
+    """Mine this coin to this pool from now on, whatever the launch check said.
+
+    `left` is the label of the pool being abandoned, for the line on screen.
+    ⛔ Refuses a coin with no doors and refuses any host that is not one of that
+    coin's own pools — nothing here can point an address at another chain."""
+    c = CHAINS.get(chain) or CHAIN_DEFS.get(chain) or {}
+    doors = c.get("doors")
+    if not doors or host not in [h for h, _label in doors]:
+        return False
+    with _door_lock:
+        _door_state["pinned"] = {"chain": chain, "host": host,
+                                 "label": label, "from": left}
+    return True
 # CPU load slider: gentle by default. Full load makes a PC noticeably slower,
 # so 100% is opt-in via an explicit checkbox; without it the slider tops out
 # at the soft max.
@@ -1552,6 +1670,14 @@ class MinerApp:
         self._start_ts = 0
         self._saw_hash = False
         self._fellback = False          # one automatic retry on the sse2 build per session
+        # ── automatic pool failover (Bitcoin only; see failover_plan) ──
+        self._fo_fail_since = None      # start of the current unbroken failure run
+        self._fo_last_accept = 0.0      # last accepted share; re-seeded every Start
+        self._fo_switches = 0           # ⛔ automatic moves since the USER pressed Start
+        self._fo_probing = False        # one failover probe in flight at a time
+        self._fo_capped = False         # the "staying put" line is said once per outage
+        self._cur_worker = ""           # the worker name THIS run is mining as
+        self._cur_pct = 0               # the CPU load THIS run was started with
         self._user_engine_choice = None  # remembered answer for an unverified user engine
         self._cur_addr = ""
         self._spec = cpu_spec()
@@ -2484,7 +2610,13 @@ class MinerApp:
                 return up
         return self.engine_path or find_local_engine()
 
-    def start(self):
+    def start(self, failover=False):
+        """Launch the engine.
+
+        ⭐ `failover` marks the restart the automatic pool switch performs: the
+        CPU load this run was started with is re-used rather than re-read, and
+        the move count survives so the cap can bite. ⛔ The Start button never
+        passes it — tkinter calls a button command with no arguments."""
         if self.proc:
             return
         addr = self.addr_var.get().strip()
@@ -2504,6 +2636,12 @@ class MinerApp:
         # the load is hard-capped at 90% — clamp here too so nothing (a stale cfg,
         # a stray value) can ever push the miner above the cap.
         eff_pct = min(self.pct_var.get(), CPU_PCT_HARD_MAX)
+        # ⭐ An automatic pool switch is not a user Start: it re-uses the load
+        # this run began with, so a slider moved since — which does nothing until
+        # the next Start — cannot change the machine's load behind the user's back.
+        if failover and self._cur_pct:
+            eff_pct = self._cur_pct
+        self._cur_pct = eff_pct
         threads = str(threads_for(eff_pct, self._ncpu))
 
         ok, detail, user_addr = validate_for_chain(chain, addr)
@@ -2551,6 +2689,16 @@ class MinerApp:
         self._saw_hash = False
         self._start_ts = time.time()
         self._cur_addr = addr
+        self._cur_worker = worker
+        # ── the failover window for this run ──
+        # 🔴 The move count is cleared by a USER Start and by nothing else. If it
+        # were reset unconditionally here the cap could never bite, because every
+        # automatic switch comes back through this same function.
+        self._fo_fail_since = None
+        self._fo_last_accept = self._start_ts   # "no share yet", not "never"
+        if not failover:
+            self._fo_switches = 0
+            self._fo_capped = False
         self._save_cfg()
         note = CHAINS[chain].get("start_note")
         if note:
@@ -2645,6 +2793,10 @@ class MinerApp:
         if now - self._last_meter_ts >= 1.0:   # CPU% needs a ~1s delta window
             self._last_meter_ts = now
             self._update_meter()
+        try:
+            self._failover_tick()
+        except Exception:
+            pass          # ⛔ failover is an extra — it never breaks the pump
         self.root.after(200, self._pump)
 
     def _handle_event(self, item):
@@ -2681,6 +2833,8 @@ class MinerApp:
             self._on_shield_result(item[1])
         elif kind == "__DOORS__":
             self._on_door_result(item[1])
+        elif kind == "__FAILOVER__":
+            self._on_failover_result(item[1], item[2], item[3], item[4], item[5])
         elif kind == "__VERIFY__":
             self._on_verify_result(item[1])
         elif kind == "__NOUPD__":
@@ -2739,6 +2893,125 @@ class MinerApp:
         self.start()
         return True
 
+    # ---------- automatic pool failover (Bitcoin only) ----------
+    def _failover_tick(self):
+        """Once per pump: has the pool we are on been dead long enough to leave?
+
+        ⛔ Decides nothing itself — failover_plan() is the whole rule, and it
+        returns None for any coin with one pool. Everything here is guards, and
+        the caller wraps it so a failure costs nothing."""
+        if self.proc is None:
+            self._fo_fail_since = None     # not mining — nothing to fail over
+            return
+        if self._fo_fail_since is None or self._fo_probing:
+            return                         # healthy, or a probe already deciding
+        now = time.time()
+        chain = self._chain()
+        host = resolve_host(chain)
+        target = failover_plan(chain, host, self._fo_switches,
+                               self._fo_fail_since, self._fo_last_accept, now)
+        if target is None:
+            # ⭐ At the cap, say so ONCE and then behave exactly like a build with
+            # no failover at all: stay put and let the engine keep retrying.
+            # (A coin with one pool lands here silently — switches is still 0.)
+            if (not self._fo_capped and self._fo_switches >= FAILOVER_MAX_SWITCHES
+                    and failover_due(self._fo_fail_since, self._fo_last_accept, now)):
+                self._fo_capped = True
+                self._logln("Both SoloLuck pools have stopped answering. The app has "
+                            "already moved %d times, so it will stay on the %s pool "
+                            "and keep retrying rather than switch back and forth."
+                            % (self._fo_switches, door_label(chain, host)), MUTED)
+            return
+        to_host, to_label = target
+        self._fo_probing = True
+        self._logln("The %s pool has not answered for %d seconds — checking whether "
+                    "the %s pool is up…"
+                    % (door_label(chain, host), int(FAILOVER_AFTER_S), to_label),
+                    ORANGE)
+        self.status_lbl.config(
+            text="● %s pool not answering — checking the %s pool… · %s"
+                 % (door_label(chain, host), to_label, CHAINS[chain]["name"]),
+            fg=ORANGE)
+        threading.Thread(target=self._failover_probe,
+                         args=(chain, host, to_host, to_label), daemon=True).start()
+
+    def _failover_probe(self, chain, from_host, to_host, to_label):
+        """Prove the other pool is alive before anyone moves to it.
+
+        ⛔ Off the UI thread, and it touches NO widget — tkinter is not thread
+        safe, so the whole answer travels back through the queue."""
+        ok = False
+        try:
+            r = probe_door(to_host, CHAINS[chain]["port"],
+                           attempts=FAILOVER_PROBE_TRIES)
+            ok = bool(r.get("ok"))
+        except Exception:
+            ok = False                     # probe_door does not raise; belt and braces
+        try:
+            self.q.put(("__FAILOVER__", chain, from_host, to_host, to_label, ok))
+        except Exception:
+            pass
+
+    def _on_failover_result(self, chain, from_host, to_host, to_label, ok):
+        """The move itself, back on the UI thread.
+
+        🔴 Fail safe in every direction: anything unexpected here leaves the
+        miner running exactly as it would have without failover."""
+        self._fo_probing = False
+        try:
+            if self.proc is None or chain != self._chain():
+                return                     # stopped or switched coin while probing
+            from_label = door_label(chain, from_host)
+            if not ok:
+                # ⛔ Not a switch, so it does NOT spend one of the two moves — but
+                # the clock restarts, so the next look is another 90 s away rather
+                # than every 200 ms. Both pools down settles into one cheap probe
+                # every 90 s, and moves the moment one of them answers again.
+                self._fo_fail_since = time.time()
+                self._logln("The %s pool is not answering either — staying on the %s "
+                            "pool. The engine keeps retrying, and the app will move "
+                            "as soon as the %s pool is back."
+                            % (to_label, from_label, to_label), MUTED)
+                return
+            # 🔴 The SAME address and worker, proven — not merely the same boxes.
+            # Both stay editable while mining, and a payout address changed
+            # mid-run must never be picked up by a restart the user did not ask
+            # for: a solved block would pay somewhere they did not choose.
+            ok_addr, _detail, user_addr = validate_for_chain(
+                chain, self.addr_var.get().strip())
+            worker = re.sub(r"[^A-Za-z0-9_-]", "", self.worker_var.get().strip())
+            if not ok_addr or user_addr != self._cur_addr or worker != self._cur_worker:
+                self._fo_fail_since = time.time()
+                self._logln("The %s pool is not answering, but the payout address or "
+                            "worker name on screen has been edited since mining "
+                            "started — not switching pool. Stop and start again to "
+                            "use the new details." % from_label, ORANGE)
+                return
+            if not pin_door(chain, to_host, to_label, left=from_label):
+                return                     # not one of this coin's pools — never move
+            self._fo_switches += 1
+            self._fo_fail_since = None
+            self._logln("The %s pool stopped answering for %ds — moving to the %s pool."
+                        % (from_label, int(FAILOVER_AFTER_S), to_label), ORANGE)
+            # ⭐ The screen follows the pin BEFORE the restart, so the endpoint on
+            # display is never one the app is not mining to.
+            self._apply_chain_labels()
+            # ⭐ Restart through start(): the same address, the same worker, the
+            # same thread count and the same per-coin state, all guaranteed by the
+            # code that already guarantees them. The only thing that changed is the
+            # host start() reads back out of resolve_host().
+            self.stop(user=False)
+            self.start(failover=True)
+            if self.proc is not None:
+                self.status_lbl.config(text="● moved to the %s pool · %s"
+                                       % (to_label, CHAINS[chain]["name"]), fg=ORANGE)
+        except Exception as e:
+            try:
+                self._logln("Automatic pool switch failed (%s) — carrying on." % e,
+                            MUTED)
+            except Exception:
+                pass
+
     def _handle_line(self, line):
         low = line.lower()
         color = None
@@ -2754,6 +3027,24 @@ class MinerApp:
             self.status_lbl.config(text="● reconnecting… · %s" % name, fg=ORANGE)
         elif state == "live":
             self.status_lbl.config(text="● mining · %s" % name, fg=GREEN)
+
+        # ⭐ Failover bookkeeping tracks EXACTLY what the status line above says:
+        # the failure run starts when the screen turns to "reconnecting…" and
+        # ends the moment anything shows the engine talking to the pool again —
+        # so what the user is told matches what the app is measuring.
+        # ⛔ Never let this throw: a miscounted timer must not cost a log line.
+        try:
+            if "accepted" in low or "yes!" in low:
+                self._fo_last_accept = time.time()
+                self._fo_fail_since = None
+                self._fo_capped = False      # a fresh outage may be explained again
+            elif state == "fail":
+                if self._fo_fail_since is None:
+                    self._fo_fail_since = time.time()
+            elif state == "live" or "rejected" in low or "booo" in low:
+                self._fo_fail_since = None   # a rejected share still proves a live pool
+        except Exception:
+            pass
 
         m = ACCEPT_RE.search(line)
         if m:

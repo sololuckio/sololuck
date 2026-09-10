@@ -598,5 +598,158 @@ class TestCoinBoundaries(unittest.TestCase):
                         "the gate should refuse before anything else")
 
 
+def _miner_src():
+    return open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "sololuck_miner.py"), encoding="utf-8").read()
+
+
+class TestPoolFailover(unittest.TestCase):
+    """⭐ The pool is chosen once at launch and cpuminer-opt takes a single -o
+    URL, so a pool that dies mid-session used to leave the app reconnecting for
+    ever with nothing being submitted and nothing on screen saying so. These
+    guard the automatic move."""
+
+    NOW = 10000.0
+
+    def setUp(self):
+        self._saved_pin = M.door_state().get("pinned")
+
+    def tearDown(self):
+        """⛔ The pin is module-global. A pin left behind would make every later
+        resolve_host() answer for a pool this test invented."""
+        with M._door_lock:
+            M._door_state["pinned"] = self._saved_pin
+
+    def _btc(self):
+        chains = _present_chains(M)
+        if "btc" not in chains:
+            self.skipTest("single-coin build without Bitcoin")
+        return chains["btc"]
+
+    def test_failover_is_unreachable_for_a_single_pool_coin(self):
+        """⛔ Bitcoin Cash and DigiByte have exactly one pool. Nothing may hand
+        them a second endpoint — the only other one would be another chain's,
+        and a block solved there would pay an address the user cannot spend."""
+        for name, c in _present_chains(M).items():
+            if c.get("doors"):
+                continue
+            self.assertIsNone(M.other_door(name, c["host"]),
+                              "%s has one pool but was offered a failover" % name)
+            # every clock, counter and window below says "move now" — and the
+            # plan must STILL be None, because this coin has nowhere to go
+            self.assertIsNone(
+                M.failover_plan(name, c["host"], 0, 0.0, 0.0, self.NOW),
+                "%s: failover_plan offered a move for a one-pool coin" % name)
+            self.assertFalse(M.pin_door(name, c["host"], "anything"),
+                             "%s: a one-pool coin must not be pinnable" % name)
+            self.assertEqual(M.resolve_host(name), c["host"],
+                             "%s moved off its only pool" % name)
+
+    def test_other_pool_is_the_partner_for_bitcoin(self):
+        """The whole point: from either Bitcoin pool, the other one."""
+        doors = self._btc()["doors"]
+        self.assertGreaterEqual(len(doors), 2)
+        (h0, l0), (h1, l1) = doors[0], doors[1]
+        self.assertEqual(M.other_door("btc", h0), (h1, l1))
+        self.assertEqual(M.other_door("btc", h1), (h0, l0))     # and back again
+        self.assertNotEqual(h0, h1)
+        # ⛔ never invents an endpoint, and never pins to one
+        self.assertIsNone(M.other_door("btc", "not-a-sololuck-pool.invalid"))
+        self.assertFalse(M.pin_door("btc", "not-a-sololuck-pool.invalid", "X"))
+
+    def test_the_anti_ping_pong_cap_actually_caps(self):
+        """⛔ Two pools that are both flapping would otherwise restart the engine
+        every 90 s for ever, throwing away the work in flight each time."""
+        host = self._btc()["doors"][0][0]
+        fail_since = self.NOW - M.FAILOVER_AFTER_S - 1
+        last_accept = fail_since
+        cap = M.FAILOVER_MAX_SWITCHES
+        self.assertGreaterEqual(cap, 1)
+        self.assertLessEqual(cap, 4, "a cap this high is not a cap")
+        for n in range(cap):                       # under the cap: a move is offered
+            self.assertIsNotNone(
+                M.failover_plan("btc", host, n, fail_since, last_accept, self.NOW),
+                "no move offered after only %d switches" % n)
+        for n in (cap, cap + 1, cap + 20):         # at and above it: never again
+            self.assertIsNone(
+                M.failover_plan("btc", host, n, fail_since, last_accept, self.NOW),
+                "the cap did not hold at %d switches" % n)
+            self.assertIsNone(
+                M.failover_plan("btc", host, n, fail_since, last_accept,
+                                self.NOW + 86400.0),
+                "the cap did not hold a day later at %d switches" % n)
+
+    def test_a_blip_never_moves_anyone(self):
+        """🔴 One dropped line is not an outage. The window has to be UNBROKEN,
+        and no share may have been accepted inside it — a CPU can go a long time
+        between shares, so 'no share' alone would move healthy users."""
+        now = self.NOW
+        after = M.FAILOVER_AFTER_S
+        self.assertGreaterEqual(after, 30.0, "too short a window moves users on a blip")
+        self.assertFalse(M.failover_due(None, 0.0, now))          # healthy
+        self.assertFalse(M.failover_due(now - 1.0, 0.0, now))     # one dropped line
+        self.assertFalse(M.failover_due(now - after + 1.0, 0.0, now))
+        self.assertTrue(M.failover_due(now - after - 1.0, 0.0, now))
+        # a share accepted inside the window means the pool is answering
+        self.assertFalse(M.failover_due(now - 600.0, now - 5.0, now))
+
+    def test_the_screen_follows_the_switch(self):
+        """⛔ The endpoint on screen must never name a pool the app has left."""
+        c = self._btc()
+        if "btc" not in M.CHAINS:
+            self.skipTest("Bitcoin is not offered by this build")
+        (h0, _l0), (h1, l1) = c["doors"][0], c["doors"][1]
+        self.assertEqual(M.resolve_host("btc"), h0)      # nothing measured, no pin
+        self.assertTrue(M.pin_door("btc", h1, l1, left=_l0))
+        self.assertEqual(M.resolve_host("btc"), h1)
+        summary = M.door_summary("btc")
+        self.assertIn(l1, summary)
+        self.assertIn("pool", summary)                   # ⭐ never "door" on screen
+        # ⛔ a Bitcoin pin leaves the single-pool coins exactly where they were
+        for name, other in _present_chains(M).items():
+            if name == "btc" or name not in M.CHAINS:
+                continue
+            self.assertEqual(M.resolve_host(name), other["host"])
+
+    def test_the_probe_thread_never_touches_a_widget(self):
+        """⛔ tkinter is not thread safe. The probe runs off the UI thread, so
+        its whole answer has to travel back through the queue."""
+        src = _miner_src()
+        body = src[src.index("def _failover_probe("):
+                   src.index("def _on_failover_result(")]
+        self.assertIn("self.q.put(", body)
+        for banned in ("_lbl.config", "self._logln(", "self.status_lbl",
+                       "messagebox.", "self.start("):
+            self.assertNotIn(banned, body,
+                             "widget or UI call from the probe thread: %s" % banned)
+
+    def test_the_other_pool_must_answer_before_we_move(self):
+        """⛔ Moving to a second dead pool helps nobody, and costs the work in
+        flight. The probe is the gate, and it comes first."""
+        src = _miner_src()
+        window = src[src.index("def _failover_tick("):
+                     src.index("def _on_failover_result(")]
+        self.assertIn("probe_door(", window)
+        body = src[src.index("def _on_failover_result("):src.index("def _handle_line(")]
+        self.assertLess(body.index("if not ok:"), body.index("pin_door("),
+                        "the app pins a pool before proving it answers")
+
+    def test_the_switch_restarts_through_start(self):
+        """⭐ Same address, same worker, same thread count, same per-coin state —
+        guaranteed by reusing start(), not by re-deriving any of it here."""
+        src = _miner_src()
+        body = src[src.index("def _on_failover_result("):src.index("def _handle_line(")]
+        self.assertIn("self.start(failover=True)", body)
+        self.assertNotIn("subprocess.Popen", body)
+        self.assertIn("self._cur_addr", body)       # the address is re-checked
+        self.assertIn("self._cur_worker", body)     # and so is the worker name
+        # ⛔ and start() must not clear the move count on a failover restart,
+        # or the cap could never bite
+        st = src[src.index("    def start(self, failover=False):"):
+                 src.index("    def _read_output(")]
+        self.assertIn("if not failover:", st)
+        self.assertLess(st.index("if not failover:"), st.index("self._fo_switches = 0"))
+
+
 if __name__ == "__main__":
     unittest.main(argv=[a for a in sys.argv if a != "--offline"], verbosity=2)
