@@ -185,9 +185,17 @@ class TestMinetestGuard(unittest.TestCase):
         try:
             for bad in ("", "not-an-address", None):
                 m._minetest(1, bad, 1)
-                out = open(os.path.join(tmp, "sololuck_minetest.txt")).read()
+                # the results file is per-coin now (one binary per coin)
+                out = open(os.path.join(
+                    tmp, "sololuck_minetest_%s.txt" % m.CHAIN)).read()
                 self.assertIn("RESULT: FAIL", out)
-                self.assertIn("bad or missing BTC address", out)
+                if m.chain_enabled(m.CHAIN):
+                    # names the coin whose address was expected
+                    self.assertIn("bad or missing %s address" % m.CHAIN_DEF["ticker"], out)
+                else:
+                    # 🔴 a gated coin refuses BEFORE the address is even looked at,
+                    # so --minetest can never mine what the GUI refuses to start
+                    self.assertIn("gated off in this build", out)
         finally:
             m.app_dir = orig
 
