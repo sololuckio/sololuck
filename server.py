@@ -3,7 +3,7 @@
 SoloLuck : public-facing solo Bitcoin mining pool landing + stats.
 
 Asia's community solo Bitcoin pool. Mine to your OWN address; if YOU strike a
-block YOU keep the whole reward minus a flat 2% fee. Non-custodial — no account,
+block YOU keep the whole reward — SoloLuck's fee is 0%. Non-custodial — no account,
 no KYC, we never hold your coins. Transparent: real hashrate, real odds, real
 blocks, real fee.
 
@@ -49,9 +49,9 @@ CKPOOL_BLOCKS_FILE = "/var/log/ckpool/blocks"
 POOL_NAME = "SoloLuck"
 POOL_TAGLINE = "Asia's community solo Bitcoin pool"
 POOL_PITCH = ("Mine to your own address. Strike a block and you keep the whole "
-              "reward minus a flat 2% fee — paid straight to you on-chain. "
+              "reward — SoloLuck takes 0% — paid straight to you on-chain. "
               "Non-custodial: no account, no KYC, we never hold your coins.")
-POOL_FEE_PCT = 2
+POOL_FEE_PCT = 0
 STRATUM_HOST = os.getenv("SOLOLUCK_STRATUM_HOST", "127.0.0.1")  # your public stratum host/IP
 STRATUM_PORT_GENERAL = 3333
 STRATUM_PORT_HIGHDIFF = 4334
@@ -881,16 +881,16 @@ OG_LOCALE = {"en": "en_US", "id": "id_ID", "ms": "ms_MY", "ja": "ja_JP",
              "th": "th_TH", "ko": "ko_KR", "zh": "zh_CN", "vi": "vi_VN",
              "tl": "fil_PH", "hi": "hi_IN"}
 DESCRIPTIONS = {
-    "en": "SoloLuck — Asia's community solo Bitcoin pool. Mine to your own address; strike a block and keep the whole reward minus a flat 2% fee. Non-custodial: no account, no KYC.",
-    "id": "SoloLuck — pool solo Bitcoin komunitas Asia. Menambang ke alamat Anda sendiri; temukan blok dan simpan seluruh hadiahnya dikurangi biaya tetap 2%. Non-kustodian: tanpa akun, tanpa KYC.",
-    "ms": "SoloLuck — pool solo Bitcoin komuniti Asia. Lombong ke alamat anda sendiri; jumpa blok dan simpan seluruh ganjaran tolak yuran tetap 2%. Bukan kustodian: tiada akaun, tiada KYC.",
-    "ja": "SoloLuck — アジアのコミュニティ・ソロ Bitcoin プール。自分のアドレスにマイニングし、ブロックを掘り当てれば一律2%の手数料を除いた報酬すべてが自分のものに。ノンカストディアル、アカウント不要、KYC 不要。",
-    "th": "SoloLuck — พูลขุด Bitcoin แบบโซโลของชุมชนเอเชีย ขุดเข้าที่อยู่ของคุณเอง เจอบล็อกแล้วได้รางวัลทั้งหมดหักค่าธรรมเนียมคงที่ 2% ไม่ดูแลเหรียญแทน ไม่ต้องสมัคร ไม่ต้อง KYC",
-    "ko": "SoloLuck — 아시아 커뮤니티 솔로 비트코인 풀. 본인 주소로 채굴하고, 블록을 찾으면 고정 2% 수수료를 뺀 전체 보상이 내 것. 비수탁형, 계정 불필요, KYC 불필요.",
-    "zh": "SoloLuck — 亚洲社区单人 Bitcoin 矿池。挖矿至你自己的地址；挖到区块即可保留全部奖励，仅扣除固定 2% 费用。非托管：无需账户，无需 KYC。",
-    "vi": "SoloLuck — pool đào Bitcoin solo của cộng đồng châu Á. Đào về địa chỉ của chính bạn; tìm được khối là giữ trọn phần thưởng trừ phí cố định 2%. Phi lưu ký: không tài khoản, không KYC.",
-    "tl": "SoloLuck — community solo Bitcoin pool ng Asia. Mag-mine sa sarili mong address; makahanap ng block at panatilihin ang buong reward bawas ang flat na 2% fee. Non-custodial: walang account, walang KYC.",
-    "hi": "SoloLuck — एशिया का कम्युनिटी सोलो Bitcoin पूल। अपने ही address पर माइन करें; ब्लॉक मिलने पर सिर्फ़ 2% फ़ीस घटाकर पूरा इनाम आपका। नॉन-कस्टोडियल: कोई अकाउंट नहीं, कोई KYC नहीं।",
+    "en": "SoloLuck — Asia's community solo Bitcoin pool. Mine to your own address; strike a block and keep the whole reward. 0% fee. Non-custodial: no account, no KYC.",
+    "id": "SoloLuck — pool solo Bitcoin komunitas Asia. Menambang ke alamat Anda sendiri; temukan blok dan simpan seluruh hadiahnya dikurangi biaya tetap 0%. Non-kustodian: tanpa akun, tanpa KYC.",
+    "ms": "SoloLuck — pool solo Bitcoin komuniti Asia. Lombong ke alamat anda sendiri; jumpa blok dan simpan seluruh ganjaran tolak yuran tetap 0%. Bukan kustodian: tiada akaun, tiada KYC.",
+    "ja": "SoloLuck — アジアのコミュニティ・ソロ Bitcoin プール。自分のアドレスにマイニングし、ブロックを掘り当てれば一律0%の手数料を除いた報酬すべてが自分のものに。ノンカストディアル、アカウント不要、KYC 不要。",
+    "th": "SoloLuck — พูลขุด Bitcoin แบบโซโลของชุมชนเอเชีย ขุดเข้าที่อยู่ของคุณเอง เจอบล็อกแล้วได้รางวัลทั้งหมดหักค่าธรรมเนียมคงที่ 0% ไม่ดูแลเหรียญแทน ไม่ต้องสมัคร ไม่ต้อง KYC",
+    "ko": "SoloLuck — 아시아 커뮤니티 솔로 비트코인 풀. 본인 주소로 채굴하고, 블록을 찾으면 고정 0% 수수료를 뺀 전체 보상이 내 것. 비수탁형, 계정 불필요, KYC 불필요.",
+    "zh": "SoloLuck — 亚洲社区单人 Bitcoin 矿池。挖矿至你自己的地址；挖到区块即可保留全部奖励，仅扣除固定 0% 费用。非托管：无需账户，无需 KYC。",
+    "vi": "SoloLuck — pool đào Bitcoin solo của cộng đồng châu Á. Đào về địa chỉ của chính bạn; tìm được khối là giữ trọn phần thưởng trừ phí cố định 0%. Phi lưu ký: không tài khoản, không KYC.",
+    "tl": "SoloLuck — community solo Bitcoin pool ng Asia. Mag-mine sa sarili mong address; makahanap ng block at panatilihin ang buong reward bawas ang flat na 0% fee. Non-custodial: walang account, walang KYC.",
+    "hi": "SoloLuck — एशिया का कम्युनिटी सोलो Bitcoin पूल। अपने ही address पर माइन करें; ब्लॉक मिलने पर सिर्फ़ 0% फ़ीस घटाकर पूरा इनाम आपका। नॉन-कस्टोडियल: कोई अकाउंट नहीं, कोई KYC नहीं।",
 }
 
 
@@ -914,8 +914,8 @@ _FAQ_LD = [
      "You mine for whole blocks on your own. No small steady payouts, but if your miner solves a block the entire reward (about 3.125 BTC plus fees) is yours, paid straight to your address. A lottery with a very big prize."),
     ("Why SoloLuck instead of going solo at home?",
      "We keep a fast, well-connected node close to Asia, so a block you find reaches the network instantly (less orphan risk). You skip running and syncing your own node, just point your miner at us."),
-    ("How does the 2% fee work?",
-     "Only if you solve a block. The 2% is taken once, inside that block's own coinbase, on-chain and in the open. No block, no fee, and we never hold your coins."),
+    ("What does SoloLuck charge?",
+     "Nothing — the fee is 0%. A block you solve pays its whole reward to your own address inside that block's own coinbase, on-chain and in the open, and we never hold your coins."),
     ("What username and password do I use?",
      "Your own BTC address (bech32 bc1q...) as the username. Add .workername to track multiple rigs. The password can be anything."),
     ("What hardware works?",
@@ -957,12 +957,12 @@ _TR_RAW = [
       "พูลโซโล Bitcoin ของชุมชนเอเชีย", "아시아 커뮤니티 솔로 비트코인 풀",
       "亚洲社区单独挖矿比特币矿池", "Pool solo Bitcoin cộng đồng châu Á")),
     (POOL_PITCH,
-     ("Tambang ke alamat Anda sendiri. Temukan satu blok dan seluruh hadiahnya jadi milik Anda — dikurangi biaya flat 2%, dibayar langsung ke Anda secara on-chain. Non-kustodial: tanpa akun, tanpa KYC, kami tidak pernah memegang koin Anda.",
-      "自分のアドレスで採掘。ブロックを見つければ報酬は丸ごとあなたのもの — 一律2%の手数料を引いた額がオンチェーンで直接支払われます。ノンカストディアル：アカウント不要・KYC不要・あなたのコインを預かりません。",
-      "ขุดไปยังที่อยู่ของคุณเอง เจอบล็อกแล้วรางวัลทั้งหมดเป็นของคุณ — หักค่าธรรมเนียมคงที่ 2% จ่ายตรงถึงคุณบนเชน ไม่เก็บรักษาเหรียญ ไม่ต้องมีบัญชี ไม่ต้อง KYC เราไม่เคยถือเหรียญของคุณ",
-      "자신의 주소로 채굴하세요. 블록을 찾으면 보상 전체가 당신의 것입니다 — 일률 2% 수수료만 제외하고 온체인으로 바로 지급됩니다. 비수탁: 계정·KYC 없음, 당신의 코인을 보관하지 않습니다.",
-      "用你自己的地址挖矿。挖到区块，全部奖励归你 — 仅扣固定 2% 费用，直接在链上支付给你。非托管：无需账户、无需 KYC，我们从不保管你的币。",
-      "Đào về địa chỉ của chính bạn. Tìm được một khối thì toàn bộ phần thưởng là của bạn — trừ phí cố định 2%, trả thẳng cho bạn on-chain. Không giữ hộ: không tài khoản, không KYC, không bao giờ giữ coin của bạn.")),
+     ("Tambang ke alamat Anda sendiri. Temukan satu blok dan seluruh hadiahnya jadi milik Anda — dikurangi biaya flat 0%, dibayar langsung ke Anda secara on-chain. Non-kustodial: tanpa akun, tanpa KYC, kami tidak pernah memegang koin Anda.",
+      "自分のアドレスで採掘。ブロックを見つければ報酬は丸ごとあなたのもの — 一律0%の手数料を引いた額がオンチェーンで直接支払われます。ノンカストディアル：アカウント不要・KYC不要・あなたのコインを預かりません。",
+      "ขุดไปยังที่อยู่ของคุณเอง เจอบล็อกแล้วรางวัลทั้งหมดเป็นของคุณ — หักค่าธรรมเนียมคงที่ 0% จ่ายตรงถึงคุณบนเชน ไม่เก็บรักษาเหรียญ ไม่ต้องมีบัญชี ไม่ต้อง KYC เราไม่เคยถือเหรียญของคุณ",
+      "자신의 주소로 채굴하세요. 블록을 찾으면 보상 전체가 당신의 것입니다 — 일률 0% 수수료만 제외하고 온체인으로 바로 지급됩니다. 비수탁: 계정·KYC 없음, 당신의 코인을 보관하지 않습니다.",
+      "用你自己的地址挖矿。挖到区块，全部奖励归你 — 仅扣固定 0% 费用，直接在链上支付给你。非托管：无需账户、无需 KYC，我们从不保管你的币。",
+      "Đào về địa chỉ của chính bạn. Tìm được một khối thì toàn bộ phần thưởng là của bạn — trừ phí cố định 0%, trả thẳng cho bạn on-chain. Không giữ hộ: không tài khoản, không KYC, không bao giờ giữ coin của bạn.")),
     ("No account. No KYC. No custodian — your address is your payout. Honest stats, real odds, real blocks.",
      ("Tanpa akun. Tanpa KYC. Tanpa kustodian — alamat Anda adalah pembayaran Anda. Statistik jujur, peluang nyata, blok nyata.",
       "アカウント不要。KYC不要。カストディアンなし — あなたのアドレスが支払先です。正直な統計、本物の確率、本物のブロック。",
@@ -975,7 +975,7 @@ _TR_RAW = [
     ("Solo odds calculator", ("Kalkulator peluang solo", "ソロ確率計算ツール", "เครื่องคำนวณโอกาสโซโล", "솔로 확률 계산기", "单独挖矿概率计算器", "Máy tính xác suất solo")),
     ("Why SoloLuck", ("Kenapa SoloLuck", "SoloLuck を選ぶ理由", "ทำไมต้อง SoloLuck", "SoloLuck를 선택하는 이유", "为什么选择 SoloLuck", "Vì sao chọn SoloLuck")),
     ("Track an address", ("Lacak alamat", "アドレスを追跡", "ติดตามที่อยู่", "주소 추적", "追踪地址", "Theo dõi địa chỉ")),
-    ("The fee — flat 2%, nothing hidden", ("Biaya — flat 2%, tanpa yang tersembunyi", "手数料 — 一律2%、隠れた費用なし", "ค่าธรรมเนียม — คงที่ 2% ไม่มีค่าซ่อนเร้น", "수수료 — 일률 2%, 숨김 없음", "费用 — 固定 2%，无隐藏费用", "Phí — cố định 2%, không ẩn phí")),
+    ("The fee — 0%, nothing taken", ("Biaya — flat 0%, tanpa yang tersembunyi", "手数料 — 一律0%、隠れた費用なし", "ค่าธรรมเนียม — คงที่ 0% ไม่มีค่าซ่อนเร้น", "수수료 — 일률 0%, 숨김 없음", "费用 — 固定 0%，无隐藏费用", "Phí — cố định 0%, không ẩn phí")),
     ("Found Blocks", ("Blok yang Ditemukan", "発見したブロック", "บล็อกที่พบ", "발견한 블록", "已找到的区块", "Khối đã tìm thấy")),
     ("Rules &amp; guidance", ("Aturan &amp; panduan", "ルールと案内", "กฎและคำแนะนำ", "규칙 및 안내", "规则与指南", "Quy tắc &amp; hướng dẫn")),
     ("Connect — pick the port that matches your gear.",
@@ -1007,13 +1007,13 @@ _TR_RAW = [
       "Một khối có thể đến ngày mai hoặc sau ngàn năm — xác suất mỗi khối là như nhau. Đó là solo.")),
     # --- why bullets ---
     ("Truly solo.", ("Benar-benar solo.", "完全にソロ。", "โซโลแท้จริง", "진정한 솔로.", "真正的单独挖矿。", "Solo thực sự.")),
-    ("You mine to your own address. If you find a block, the whole reward is yours — minus a flat 2% fee.",
-     ("Anda menambang ke alamat sendiri. Jika menemukan blok, seluruh hadiah jadi milik Anda — dikurangi biaya flat 2%.",
-      "自分のアドレスで採掘します。ブロックを見つければ報酬は丸ごとあなたのもの — 一律2%の手数料を除いて。",
-      "คุณขุดไปยังที่อยู่ของคุณเอง ถ้าเจอบล็อก รางวัลทั้งหมดเป็นของคุณ — หักค่าธรรมเนียมคงที่ 2%",
-      "자신의 주소로 채굴합니다. 블록을 찾으면 보상 전체가 당신의 것입니다 — 일률 2% 수수료만 제외.",
-      "你用自己的地址挖矿。挖到区块，全部奖励归你 — 仅扣固定 2% 费用。",
-      "Bạn đào về địa chỉ của mình. Tìm được khối thì toàn bộ phần thưởng là của bạn — trừ phí cố định 2%.")),
+    ("You mine to your own address. If you find a block, the whole reward is yours — the fee is 0%.",
+     ("Anda menambang ke alamat sendiri. Jika menemukan blok, seluruh hadiah jadi milik Anda — dikurangi biaya flat 0%.",
+      "自分のアドレスで採掘します。ブロックを見つければ報酬は丸ごとあなたのもの — 一律0%の手数料を除いて。",
+      "คุณขุดไปยังที่อยู่ของคุณเอง ถ้าเจอบล็อก รางวัลทั้งหมดเป็นของคุณ — หักค่าธรรมเนียมคงที่ 0%",
+      "자신의 주소로 채굴합니다. 블록을 찾으면 보상 전체가 당신의 것입니다 — 일률 0% 수수료만 제외.",
+      "你用自己的地址挖矿。挖到区块，全部奖励归你 — 仅扣固定 0% 费用。",
+      "Bạn đào về địa chỉ của mình. Tìm được khối thì toàn bộ phần thưởng là của bạn — trừ phí cố định 0%.")),
     ("Non-custodial.", ("Non-kustodial.", "ノンカストディアル。", "ไม่เก็บรักษาเหรียญ", "비수탁.", "非托管。", "Không giữ hộ.")),
     ("We never hold your coins. There's nothing to withdraw and nothing for us to lose.",
      ("Kami tidak pernah memegang koin Anda. Tidak ada yang perlu ditarik dan tidak ada yang bisa kami hilangkan.",
@@ -1058,7 +1058,7 @@ _TR_RAW = [
     # --- FAQ questions ---
     ("What is solo mining?", ("Apa itu menambang solo?", "ソロマイニングとは？", "การขุดโซโลคืออะไร?", "솔로 채굴이란?", "什么是单独挖矿？", "Đào solo là gì?")),
     ("Why SoloLuck instead of going solo at home?", ("Kenapa SoloLuck dibanding solo sendiri di rumah?", "自宅でソロをやる代わりに、なぜ SoloLuck？", "ทำไมต้อง SoloLuck แทนที่จะขุดโซโลเองที่บ้าน?", "집에서 직접 솔로 하는 대신 왜 SoloLuck인가요?", "为什么用 SoloLuck 而不是在家自己单独挖？", "Vì sao dùng SoloLuck thay vì tự solo ở nhà?")),
-    ("How does the 2% fee work?", ("Bagaimana biaya 2% bekerja?", "2%の手数料はどう機能しますか？", "ค่าธรรมเนียม 2% ทำงานอย่างไร?", "2% 수수료는 어떻게 작동하나요?", "2% 费用如何运作？", "Phí 2% hoạt động thế nào?")),
+    ("What does SoloLuck charge?", ("Bagaimana biaya 0% bekerja?", "0%の手数料はどう機能しますか？", "ค่าธรรมเนียม 0% ทำงานอย่างไร?", "0% 수수료는 어떻게 작동하나요?", "0% 费用如何运作？", "Phí 0% hoạt động thế nào?")),
     ("What username / password do I use?", ("Username / password apa yang saya pakai?", "ユーザー名・パスワードは何を使う？", "ใช้ username / password อะไร?", "어떤 username / password를 쓰나요?", "用什么用户名 / 密码？", "Dùng username / password nào?")),
     ("What hardware works?", ("Perangkat apa yang bisa dipakai?", "どのハードウェアが使えますか？", "ฮาร์ดแวร์อะไรใช้ได้บ้าง?", "어떤 하드웨어가 작동하나요?", "支持什么硬件？", "Phần cứng nào dùng được?")),
     ("Is it safe and non-custodial?", ("Apakah aman dan non-kustodial?", "安全でノンカストディアルですか？", "ปลอดภัยและไม่เก็บรักษาเหรียญหรือไม่?", "안전하고 비수탁인가요?", "安全且非托管吗？", "Có an toàn và không giữ hộ không?")),
@@ -1130,9 +1130,9 @@ _TR_ADD = {
  "Asia&#x27;s community solo Bitcoin pool": {"ms":"Pool solo Bitcoin komuniti Asia","tl":"Komunidad na solo Bitcoin pool ng Asya","hi":"एशिया का कम्युनिटी सोलो Bitcoin पूल"},
  "Asia's community solo Bitcoin pool": {"ms":"Pool solo Bitcoin komuniti Asia","tl":"Komunidad na solo Bitcoin pool ng Asya","hi":"एशिया का कम्युनिटी सोलो Bitcoin पूल"},
  POOL_PITCH: {
-   "ms":"Lombong ke alamat anda sendiri. Jumpa satu blok dan seluruh ganjaran jadi milik anda — ditolak yuran tetap 2%, dibayar terus kepada anda secara on-chain. Bukan kustodi: tiada akaun, tiada KYC, kami tidak pernah memegang koin anda.",
-   "tl":"Magmina sa sarili mong address. Kapag may nahanap kang block, sa'yo ang buong reward — bawas lang ang flat 2% fee, diretsong bayad sa'yo on-chain. Non-custodial: walang account, walang KYC, hindi namin hawak ang coins mo.",
-   "hi":"अपने ही address पर माइन करें। एक block मिला तो पूरा reward आपका — सिर्फ़ 2% फ़्लैट fee घटाकर, सीधे आपको on-chain मिलता है। Non-custodial: कोई account नहीं, कोई KYC नहीं, हम आपके coins कभी नहीं रखते।"},
+   "ms":"Lombong ke alamat anda sendiri. Jumpa satu blok dan seluruh ganjaran jadi milik anda — ditolak yuran tetap 0%, dibayar terus kepada anda secara on-chain. Bukan kustodi: tiada akaun, tiada KYC, kami tidak pernah memegang koin anda.",
+   "tl":"Magmina sa sarili mong address. Kapag may nahanap kang block, sa'yo ang buong reward — bawas lang ang flat 0% fee, diretsong bayad sa'yo on-chain. Non-custodial: walang account, walang KYC, hindi namin hawak ang coins mo.",
+   "hi":"अपने ही address पर माइन करें। एक block मिला तो पूरा reward आपका — सिर्फ़ 0% फ़्लैट fee घटाकर, सीधे आपको on-chain मिलता है। Non-custodial: कोई account नहीं, कोई KYC नहीं, हम आपके coins कभी नहीं रखते।"},
  "No account. No KYC. No custodian — your address is your payout. Honest stats, real odds, real blocks.": {
    "ms":"Tiada akaun. Tiada KYC. Tiada kustodi — alamat anda ialah bayaran anda. Statistik jujur, peluang sebenar, blok sebenar.",
    "tl":"Walang account. Walang KYC. Walang custodian — ang address mo ang payout mo. Totoong stats, totoong odds, totoong blocks.",
@@ -1141,7 +1141,7 @@ _TR_ADD = {
  "Solo odds calculator": {"ms":"Kalkulator peluang solo","tl":"Solo odds calculator","hi":"सोलो संभावना कैलकुलेटर"},
  "Why SoloLuck": {"ms":"Kenapa SoloLuck","tl":"Bakit SoloLuck","hi":"SoloLuck क्यों"},
  "Track an address": {"ms":"Jejak alamat","tl":"Mag-track ng address","hi":"कोई address ट्रैक करें"},
- "The fee — flat 2%, nothing hidden": {"ms":"Yuran — tetap 2%, tiada yang tersembunyi","tl":"Ang fee — flat 2%, walang tago","hi":"फ़ीस — फ़्लैट 2%, कुछ भी छिपा नहीं"},
+ "The fee — 0%, nothing taken": {"ms":"Yuran — tetap 0%, tiada yang tersembunyi","tl":"Ang fee — flat 0%, walang tago","hi":"फ़ीस — फ़्लैट 0%, कुछ भी छिपा नहीं"},
  "Found Blocks": {"ms":"Blok Dijumpai","tl":"Mga Nahanap na Block","hi":"मिले हुए Blocks"},
  "Rules &amp; guidance": {"ms":"Peraturan &amp; panduan","tl":"Mga patakaran &amp; gabay","hi":"नियम &amp; मार्गदर्शन"},
  "Connect — pick the port that matches your gear.": {"ms":"Sambung — pilih port yang sepadan dengan peranti anda.","tl":"Kumonekta — piliin ang port na bagay sa gear mo.","hi":"कनेक्ट करें — अपने gear से मेल खाता port चुनें।"},
@@ -1161,10 +1161,10 @@ _TR_ADD = {
    "tl":"Pwedeng dumating ang block bukas o sa loob ng isang libong taon — pareho lang ang odds kada block. Ganyan ang solo.",
    "hi":"Block कल भी मिल सकता है या हज़ार साल में — हर block पर odds एक जैसे हैं। यही सोलो है।"},
  "Truly solo.": {"ms":"Benar-benar solo.","tl":"Tunay na solo.","hi":"सच में सोलो।"},
- "You mine to your own address. If you find a block, the whole reward is yours — minus a flat 2% fee.": {
-   "ms":"Anda melombong ke alamat sendiri. Jika jumpa blok, seluruh ganjaran milik anda — ditolak yuran tetap 2%.",
-   "tl":"Nagmimina ka sa sarili mong address. Kapag may nahanap kang block, sa'yo ang buong reward — bawas lang ang flat 2% fee.",
-   "hi":"आप अपने address पर माइन करते हैं। Block मिला तो पूरा reward आपका — सिर्फ़ 2% फ़्लैट fee घटाकर।"},
+ "You mine to your own address. If you find a block, the whole reward is yours — the fee is 0%.": {
+   "ms":"Anda melombong ke alamat sendiri. Jika jumpa blok, seluruh ganjaran milik anda — ditolak yuran tetap 0%.",
+   "tl":"Nagmimina ka sa sarili mong address. Kapag may nahanap kang block, sa'yo ang buong reward — bawas lang ang flat 0% fee.",
+   "hi":"आप अपने address पर माइन करते हैं। Block मिला तो पूरा reward आपका — सिर्फ़ 0% फ़्लैट fee घटाकर।"},
  "Non-custodial.": {"ms":"Bukan kustodi.","tl":"Non-custodial.","hi":"Non-custodial।"},
  "We never hold your coins. There's nothing to withdraw and nothing for us to lose.": {
    "ms":"Kami tidak pernah memegang koin anda. Tiada apa untuk dikeluarkan dan tiada apa untuk kami hilang.",
@@ -1192,7 +1192,7 @@ _TR_ADD = {
  "View stats": {"ms":"Lihat statistik","tl":"Tingnan ang stats","hi":"आँकड़े देखें"},
  "What is solo mining?": {"ms":"Apakah perlombongan solo?","tl":"Ano ang solo mining?","hi":"सोलो माइनिंग क्या है?"},
  "Why SoloLuck instead of going solo at home?": {"ms":"Kenapa SoloLuck berbanding solo sendiri di rumah?","tl":"Bakit SoloLuck imbes na solo sa bahay?","hi":"घर पर खुद सोलो करने के बजाय SoloLuck क्यों?"},
- "How does the 2% fee work?": {"ms":"Bagaimana yuran 2% berfungsi?","tl":"Paano gumagana ang 2% fee?","hi":"2% fee कैसे काम करती है?"},
+ "What does SoloLuck charge?": {"ms":"Bagaimana yuran 0% berfungsi?","tl":"Paano gumagana ang 0% fee?","hi":"0% fee कैसे काम करती है?"},
  "What username / password do I use?": {"ms":"Username / password apa yang saya guna?","tl":"Anong username / password ang gagamitin ko?","hi":"मैं कौन-सा username / password इस्तेमाल करूँ?"},
  "What hardware works?": {"ms":"Perkakasan apa yang boleh digunakan?","tl":"Anong hardware ang pwede?","hi":"कौन-सा hardware चलेगा?"},
  "Is it safe and non-custodial?": {"ms":"Adakah ia selamat dan bukan kustodi?","tl":"Ligtas ba at non-custodial?","hi":"क्या यह सुरक्षित और non-custodial है?"},
@@ -1327,7 +1327,7 @@ def render_landing(lang="en"):
     <span class="%(dot_cls)s" id="livedot"></span><span class="hl" id="liveword">%(live_word)s</span>
     · <span class="hl" id="hr1m">%(hr1m)s</span>
     · <span id="workers">%(workers)s</span> miners
-    <span class="muted">· solo · 2%% fee · paid on-chain to you</span>
+    <span class="muted">· solo · 0%% fee · paid on-chain to you</span>
   </p>
   <p class="trust">No account. No KYC. No custodian — your address is your payout. Honest stats, real odds, real blocks.</p>
   <p style="margin:16px 0 0"><a class="btn cta" href="#connect">Start mining — get your stratum URL</a></p>
@@ -1402,7 +1402,7 @@ def render_landing(lang="en"):
 <div class="card">
   <h2>Why SoloLuck</h2>
   <ul class="bullets">
-    <li><b>Truly solo.</b> You mine to your own address. If you find a block, the whole reward is yours — minus a flat 2%% fee.</li>
+    <li><b>Truly solo.</b> You mine to your own address. If you find a block, the whole reward is yours — the fee is 0%%.</li>
     <li><b>Non-custodial.</b> We never hold your coins. There's nothing to withdraw and nothing for us to lose.</li>
     <li><b>No account, no KYC.</b> No sign-up, no email, no ID. Point a miner at us and you're in.</li>
     <li><b>For the Asian mining community.</b> A well-connected node close to home means your blocks reach the network fast.</li>
@@ -1420,14 +1420,14 @@ def render_landing(lang="en"):
 </div>
 
 <div class="card">
-  <h2>The fee — flat 2%%, nothing hidden</h2>
+  <h2>The fee — 0%%, nothing taken</h2>
   <div class="feebig">%(fee)s%%</div>
-  <p>Find a block and you keep <b>%(rest)s%%</b>. Our 2%% is taken once, in the block's
-  own coinbase — so the split happens on-chain, in the open. We never touch the rest,
-  because we never hold your coins. You get paid only when <i>you</i> solve a block,
-  and when you do, the reward lands straight at your address.</p>
-  <p class="muted">Solo mining is a fair lottery — we just sell you the ticket and
-  keep the line to the network fast. Best-effort uptime, no guarantees.</p>
+  <p>Find a block and you keep <b>%(rest)s%%</b>. There is no split: the block's own
+  coinbase pays its whole reward to the address you mine with, on-chain and in the
+  open. We never touch it, because we never hold your coins. You get paid only when
+  <i>you</i> solve a block, and when you do, the reward lands straight at your address.</p>
+  <p class="muted">Solo mining is all-or-nothing — we just keep the line to the
+  network fast. Best-effort uptime, no guarantees.</p>
 </div>
 
 <div class="card">
@@ -1439,7 +1439,7 @@ def render_landing(lang="en"):
   <h2>FAQ</h2>
   <details><summary>What is solo mining?</summary><p class="muted">You mine for whole blocks on your own. No small steady payouts — but if your miner solves a block, the <b>entire</b> reward (~3.125 BTC + fees) is yours, paid straight to your address. A lottery with a very big prize.</p></details>
   <details><summary>Why SoloLuck instead of going solo at home?</summary><p class="muted">We keep a fast, well-connected node close to Asia, so a block you find reaches the network instantly (less orphan risk). You skip running and syncing your own node — just point your miner at us.</p></details>
-  <details><summary>How does the 2%% fee work?</summary><p class="muted">Only if <i>you</i> solve a block. The 2%% is taken once, inside that block's own coinbase, on-chain and in the open. No block, no fee — and we never hold your coins.</p></details>
+  <details><summary>What does SoloLuck charge?</summary><p class="muted">Nothing — the fee is 0%%. A block <i>you</i> solve pays its whole reward to your own address, inside that block's own coinbase, on-chain and in the open. We never hold your coins.</p></details>
   <details><summary>What username / password do I use?</summary><p class="muted">Your own BTC address (bech32 <code>bc1q…</code>) as the username. Add <code>.workername</code> to track multiple rigs (e.g. <code>bc1q….rig1</code>). The password can be anything.</p></details>
   <details><summary>What hardware works?</summary><p class="muted">Any SHA-256 ASIC — Bitaxe, NerdQAxe, Avalon, Antminer and the like. Pick the port that matches your hashrate; vardiff tunes the rest. ~100 GH/s is a sensible minimum.</p></details>
   <details><summary>Is it safe and non-custodial?</summary><p class="muted">Yes. We never hold your coins — no balance, no withdrawal. A found block pays directly to the address you mine with. No account, no KYC, no trackers.</p></details>
@@ -1458,7 +1458,7 @@ def render_landing(lang="en"):
   </ul>
 </div>
 
-<footer>SoloLuck · Asia's community solo Bitcoin pool · non-custodial · 2%% fee</footer>
+<footer>SoloLuck · Asia's community solo Bitcoin pool · non-custodial · 0%% fee</footer>
 </div>
 <script>
 function fmt(x){return (x===null||x===undefined||x==='')?'—':x;}
@@ -1779,7 +1779,7 @@ def _user_shell(safe_addr, body, lang="en"):
 <p class="pitch mono" style="word-break:break-all"><a href="https://mempool.space/address/%(addr)s" target="_blank" rel="noopener">%(addr)s</a></p>
 <p class="muted"><a href="%(back)s">← back to pool</a></p></header>
 %(body)s
-<footer>SoloLuck · Asia's community solo Bitcoin pool · non-custodial · 2%% fee</footer>
+<footer>SoloLuck · Asia's community solo Bitcoin pool · non-custodial · 0%% fee</footer>
 </div></body></html>""" % {"addr": safe_addr, "css": PAGE_CSS, "body": body, "back": back}
     if lang != "en":
         page = _translate(page, lang)
