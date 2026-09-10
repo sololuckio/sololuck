@@ -2,7 +2,7 @@
 """
 SoloLuck : public-facing solo Bitcoin mining pool landing + stats.
 
-Asia's community solo Bitcoin pool. Mine to your OWN address; if YOU strike a
+Community solo Bitcoin pool. Mine to your OWN address; if YOU strike a
 block YOU keep the whole reward — SoloLuck's fee is 0%. Non-custodial — no account,
 no KYC, we never hold your coins. Transparent: real hashrate, real odds, real
 blocks, real fee.
@@ -47,7 +47,7 @@ CKPOOL_BLOCKS_FILE = "/var/log/ckpool/blocks"
 
 # Public-facing connection details (the public stratum endpoint IS public).
 POOL_NAME = "SoloLuck"
-POOL_TAGLINE = "Asia's community solo Bitcoin pool"
+POOL_TAGLINE = "Community solo Bitcoin pool"
 POOL_PITCH = ("Mine to your own address. Strike a block and you keep the whole "
               "reward — SoloLuck takes 0% — paid straight to you on-chain. "
               "Non-custodial: no account, no KYC, we never hold your coins.")
@@ -55,13 +55,6 @@ POOL_FEE_PCT = 0
 STRATUM_HOST = os.getenv("SOLOLUCK_STRATUM_HOST", "127.0.0.1")  # your public stratum host/IP
 STRATUM_PORT_GENERAL = 3333
 STRATUM_PORT_HIGHDIFF = 4334
-
-# Connection tiers (public-safe). The Standard tier is gated by STANDARD_LIVE:
-# while False we never advertise a usable stratum URL there (Copy disabled,
-# marked 'coming soon') so we never point miners at a port that does not accept
-# stratum.
-STANDARD_LIVE = True
-STRATUM_PORT_STANDARD = 8081
 
 STATS_TIMEOUT = 4  # seconds
 
@@ -768,27 +761,11 @@ def fmt_int(n):
 
 def _connect_card():
     """
-    Three-tier connect section. Standard (:8081) is gated by STANDARD_LIVE:
-    while False we never advertise a usable stratum URL there (Copy disabled,
-    marked 'coming soon') because the port does not yet accept stratum.
+    Two-tier connect section. The middle 'Standard' tier was retired, so Lite
+    carries the START HERE ribbon and covers everything up to the Pro floor.
     """
     lite_url = "stratum+tcp://%s:%d" % (STRATUM_HOST, STRATUM_PORT_GENERAL)
     pro_url = "stratum+tcp://%s:%d" % (STRATUM_HOST, STRATUM_PORT_HIGHDIFF)
-    std_url = "stratum+tcp://%s:%d" % (STRATUM_HOST, STRATUM_PORT_STANDARD)
-
-    # Standard tier varies by whether the port is genuinely live.
-    if STANDARD_LIVE:
-        std_badge = "<span class='ribbon'>START HERE</span>"
-        std_url_cls = "url"
-        std_copy = ("<button class='copy' type='button' "
-                    "data-copy='%s'>Copy</button>" % html.escape(std_url))
-        std_url_txt = html.escape(std_url)
-    else:
-        std_badge = ("<span class='ribbon'>START HERE</span>"
-                     "<span class='soon'>COMING SOON</span>")
-        std_url_cls = "url dim"
-        std_copy = "<button class='copy' type='button' disabled>Soon</button>"
-        std_url_txt = html.escape(std_url) + " — not live yet"
 
     return """
 <div class="card" id="connect">
@@ -797,26 +774,15 @@ def _connect_card():
   <div class="tiers">
 
     <div class="tier lite">
+      <span class='ribbon'>START HERE</span>
       <p class="tname">Lite</p>
-      <p class="role">Tiny &amp; hobby rigs, &lt; ~2 TH/s</p>
+      <p class="role">Hobby rigs &amp; home ASICs, up to ~200 TH/s</p>
       <div class="urlrow">
         <div class="url mono">%(lite_url)s</div>
         <button class="copy" type="button" data-copy="%(lite_url)s">Copy</button>
       </div>
       <p class="meta">Start difficulty <b>1,024</b> · vardiff</p>
-      <p class="egs">USB sticks · NerdMiner · Bitaxe · single Avalon Nano</p>
-    </div>
-
-    <div class="tier std">
-      %(std_badge)s
-      <p class="tname">Standard</p>
-      <p class="role">Home &amp; small-farm ASICs, ~2–200 TH/s</p>
-      <div class="urlrow">
-        <div class="%(std_url_cls)s mono">%(std_url_txt)s</div>
-        %(std_copy)s
-      </div>
-      <p class="meta">Start difficulty <b>131,072</b> · vardiff</p>
-      <p class="egs">Antminer S9/S19 · Whatsminer · Avalon 12xx</p>
+      <p class="egs">USB sticks · NerdMiner · Bitaxe · Avalon Nano · Antminer S9/S19 · Whatsminer</p>
     </div>
 
     <div class="tier pro">
@@ -844,17 +810,12 @@ def _connect_card():
     in <i>separate</i> fields — with no <code>stratum+tcp://</code> prefix. Use
     Host <code>%(host)s</code>
     <button class="copy" type="button" data-copy="%(host)s">Copy</button>
-    and Port <code>3333</code> Lite / <code>8081</code> Standard /
-    <code>4334</code> Pro.
+    and Port <code>3333</code> Lite / <code>4334</code> Pro.
   </div>
 </div>""" % {
         "host": html.escape(STRATUM_HOST),
         "lite_url": html.escape(lite_url),
         "pro_url": html.escape(pro_url),
-        "std_badge": std_badge,
-        "std_url_cls": std_url_cls,
-        "std_url_txt": std_url_txt,
-        "std_copy": std_copy,
     }
 
 
@@ -862,7 +823,7 @@ def _connect_card():
 # normally; other languages are made by post-process phrase replacement (keys match
 # the RENDERED HTML, incl. entities like &amp; / &#x27;). Crypto/technical terms
 # (hashrate, stratum, BTC, ASIC, KYC, vardiff, TH/s, SoloLuck) stay in English by
-# design — that's how Asian mining communities read them, and it keeps it natural.
+# design — that's how mining communities read them, and it keeps it natural.
 # Translations are a solid first pass; a native speaker can refine any phrase by
 # editing the tuple here.
 SUPPORTED_LANGS = ["en", "id", "ms", "ja", "th", "ko", "zh", "vi", "tl", "hi"]
@@ -881,16 +842,16 @@ OG_LOCALE = {"en": "en_US", "id": "id_ID", "ms": "ms_MY", "ja": "ja_JP",
              "th": "th_TH", "ko": "ko_KR", "zh": "zh_CN", "vi": "vi_VN",
              "tl": "fil_PH", "hi": "hi_IN"}
 DESCRIPTIONS = {
-    "en": "SoloLuck — Asia's community solo Bitcoin pool. Mine to your own address; strike a block and keep the whole reward. 0% fee. Non-custodial: no account, no KYC.",
-    "id": "SoloLuck — pool solo Bitcoin komunitas Asia. Menambang ke alamat Anda sendiri; temukan blok dan simpan seluruh hadiahnya dikurangi biaya tetap 0%. Non-kustodian: tanpa akun, tanpa KYC.",
-    "ms": "SoloLuck — pool solo Bitcoin komuniti Asia. Lombong ke alamat anda sendiri; jumpa blok dan simpan seluruh ganjaran tolak yuran tetap 0%. Bukan kustodian: tiada akaun, tiada KYC.",
-    "ja": "SoloLuck — アジアのコミュニティ・ソロ Bitcoin プール。自分のアドレスにマイニングし、ブロックを掘り当てれば一律0%の手数料を除いた報酬すべてが自分のものに。ノンカストディアル、アカウント不要、KYC 不要。",
-    "th": "SoloLuck — พูลขุด Bitcoin แบบโซโลของชุมชนเอเชีย ขุดเข้าที่อยู่ของคุณเอง เจอบล็อกแล้วได้รางวัลทั้งหมดหักค่าธรรมเนียมคงที่ 0% ไม่ดูแลเหรียญแทน ไม่ต้องสมัคร ไม่ต้อง KYC",
-    "ko": "SoloLuck — 아시아 커뮤니티 솔로 비트코인 풀. 본인 주소로 채굴하고, 블록을 찾으면 고정 0% 수수료를 뺀 전체 보상이 내 것. 비수탁형, 계정 불필요, KYC 불필요.",
-    "zh": "SoloLuck — 亚洲社区单人 Bitcoin 矿池。挖矿至你自己的地址；挖到区块即可保留全部奖励，仅扣除固定 0% 费用。非托管：无需账户，无需 KYC。",
-    "vi": "SoloLuck — pool đào Bitcoin solo của cộng đồng châu Á. Đào về địa chỉ của chính bạn; tìm được khối là giữ trọn phần thưởng trừ phí cố định 0%. Phi lưu ký: không tài khoản, không KYC.",
-    "tl": "SoloLuck — community solo Bitcoin pool ng Asia. Mag-mine sa sarili mong address; makahanap ng block at panatilihin ang buong reward bawas ang flat na 0% fee. Non-custodial: walang account, walang KYC.",
-    "hi": "SoloLuck — एशिया का कम्युनिटी सोलो Bitcoin पूल। अपने ही address पर माइन करें; ब्लॉक मिलने पर सिर्फ़ 0% फ़ीस घटाकर पूरा इनाम आपका। नॉन-कस्टोडियल: कोई अकाउंट नहीं, कोई KYC नहीं।",
+    "en": "SoloLuck — Community solo Bitcoin pool. Mine to your own address; strike a block and keep the whole reward. 0% fee. Non-custodial: no account, no KYC.",
+    "id": "SoloLuck — pool solo Bitcoin komunitas. Menambang ke alamat Anda sendiri; temukan blok dan simpan seluruh hadiahnya dikurangi biaya tetap 0%. Non-kustodian: tanpa akun, tanpa KYC.",
+    "ms": "SoloLuck — pool solo Bitcoin komuniti. Lombong ke alamat anda sendiri; jumpa blok dan simpan seluruh ganjaran tolak yuran tetap 0%. Bukan kustodian: tiada akaun, tiada KYC.",
+    "ja": "SoloLuck — コミュニティ・ソロ Bitcoin プール。自分のアドレスにマイニングし、ブロックを掘り当てれば一律0%の手数料を除いた報酬すべてが自分のものに。ノンカストディアル、アカウント不要、KYC 不要。",
+    "th": "SoloLuck — พูลขุด Bitcoin แบบโซโลของชุมชน ขุดเข้าที่อยู่ของคุณเอง เจอบล็อกแล้วได้รางวัลทั้งหมดหักค่าธรรมเนียมคงที่ 0% ไม่ดูแลเหรียญแทน ไม่ต้องสมัคร ไม่ต้อง KYC",
+    "ko": "SoloLuck — 커뮤니티 솔로 비트코인 풀. 본인 주소로 채굴하고, 블록을 찾으면 고정 0% 수수료를 뺀 전체 보상이 내 것. 비수탁형, 계정 불필요, KYC 불필요.",
+    "zh": "SoloLuck — 社区单人 Bitcoin 矿池。挖矿至你自己的地址；挖到区块即可保留全部奖励，仅扣除固定 0% 费用。非托管：无需账户，无需 KYC。",
+    "vi": "SoloLuck — pool đào Bitcoin solo của cộng đồng. Đào về địa chỉ của chính bạn; tìm được khối là giữ trọn phần thưởng trừ phí cố định 0%. Phi lưu ký: không tài khoản, không KYC.",
+    "tl": "SoloLuck — community solo Bitcoin pool. Mag-mine sa sarili mong address; makahanap ng block at panatilihin ang buong reward bawas ang flat na 0% fee. Non-custodial: walang account, walang KYC.",
+    "hi": "SoloLuck — कम्युनिटी सोलो Bitcoin पूल। अपने ही address पर माइन करें; ब्लॉक मिलने पर सिर्फ़ 0% फ़ीस घटाकर पूरा इनाम आपका। नॉन-कस्टोडियल: कोई अकाउंट नहीं, कोई KYC नहीं।",
 }
 
 
@@ -913,7 +874,7 @@ _FAQ_LD = [
     ("What is solo mining?",
      "You mine for whole blocks on your own. No small steady payouts, but if your miner solves a block the entire reward (about 3.125 BTC plus fees) is yours, paid straight to your address. A lottery with a very big prize."),
     ("Why SoloLuck instead of going solo at home?",
-     "We keep a fast, well-connected node close to Asia, so a block you find reaches the network instantly (less orphan risk). You skip running and syncing your own node, just point your miner at us."),
+     "We keep a fast, well-connected node, so a block you find reaches the network instantly (less orphan risk). You skip running and syncing your own node, just point your miner at us."),
     ("What does SoloLuck charge?",
      "Nothing — the fee is 0%. A block you solve pays its whole reward to your own address inside that block's own coinbase, on-chain and in the open, and we never hold your coins."),
     ("What username and password do I use?",
@@ -948,14 +909,10 @@ def _json_ld():
 # (english_in_rendered_html, (id, ja, th, ko, zh, vi))
 _TR_RAW = [
     # --- hero ---
-    ("Asia&#x27;s community solo Bitcoin pool",
-     ("Pool solo Bitcoin komunitas Asia", "アジアのコミュニティ・ソロ Bitcoin プール",
-      "พูลโซโล Bitcoin ของชุมชนเอเชีย", "아시아 커뮤니티 솔로 비트코인 풀",
-      "亚洲社区单独挖矿比特币矿池", "Pool solo Bitcoin cộng đồng châu Á")),
-    ("Asia's community solo Bitcoin pool",
-     ("Pool solo Bitcoin komunitas Asia", "アジアのコミュニティ・ソロ Bitcoin プール",
-      "พูลโซโล Bitcoin ของชุมชนเอเชีย", "아시아 커뮤니티 솔로 비트코인 풀",
-      "亚洲社区单独挖矿比特币矿池", "Pool solo Bitcoin cộng đồng châu Á")),
+    ("Community solo Bitcoin pool",
+     ("Pool solo Bitcoin komunitas", "コミュニティ・ソロ Bitcoin プール",
+      "พูลโซโล Bitcoin ของชุมชน", "커뮤니티 솔로 비트코인 풀",
+      "社区单独挖矿比特币矿池", "Pool solo Bitcoin cộng đồng")),
     (POOL_PITCH,
      ("Tambang ke alamat Anda sendiri. Temukan satu blok dan seluruh hadiahnya jadi milik Anda — dikurangi biaya flat 0%, dibayar langsung ke Anda secara on-chain. Non-kustodial: tanpa akun, tanpa KYC, kami tidak pernah memegang koin Anda.",
       "自分のアドレスで採掘。ブロックを見つければ報酬は丸ごとあなたのもの — 一律0%の手数料を引いた額がオンチェーンで直接支払われます。ノンカストディアル：アカウント不要・KYC不要・あなたのコインを預かりません。",
@@ -1030,14 +987,6 @@ _TR_RAW = [
       "가입·이메일·신분증 필요 없음. 채굴기를 우리에게 연결하면 끝입니다.",
       "无需注册、邮箱、身份证。把矿机指向我们即可加入。",
       "Không đăng ký, không email, không giấy tờ. Trỏ máy đào vào chúng tôi là xong.")),
-    ("For the Asian mining community.", ("Untuk komunitas penambang Asia.", "アジアのマイニングコミュニティのために。", "เพื่อชุมชนนักขุดเอเชีย", "아시아 채굴 커뮤니티를 위해.", "为亚洲挖矿社区而建。", "Cho cộng đồng đào coin châu Á.")),
-    ("A well-connected node close to home means your blocks reach the network fast.",
-     ("Node yang terhubung baik dan dekat dengan rumah membuat blok Anda cepat sampai ke jaringan.",
-      "近くにある接続性の高いノードのおかげで、あなたのブロックは素早くネットワークに届きます。",
-      "โหนดที่เชื่อมต่อดีและอยู่ใกล้บ้าน ทำให้บล็อกของคุณถึงเครือข่ายได้เร็ว",
-      "가까운 곳의 연결성 좋은 노드 덕분에 당신의 블록이 네트워크에 빠르게 도달합니다.",
-      "靠近本地、连接良好的节点让你的区块快速送达全网。",
-      "Node kết nối tốt và gần nhà giúp khối của bạn đến mạng nhanh.")),
     ("Transparent by default.", ("Transparan secara default.", "デフォルトで透明。", "โปร่งใสโดยพื้นฐาน", "기본이 투명.", "默认透明。", "Minh bạch mặc định.")),
     ("The numbers on this page are the real ones — same hashrate, same odds, same blocks we see.",
      ("Angka di halaman ini adalah yang asli — hashrate, peluang, dan blok yang sama dengan yang kami lihat.",
@@ -1085,13 +1034,13 @@ _TR_RAW = [
       "장비에 맞는 포트를 고르면 나머지는 vardiff가 자동 처리합니다.",
       "选择匹配你设备的端口，其余交给 vardiff 自动处理。",
       "Chọn cổng phù hợp thiết bị; vardiff lo phần còn lại tự động.")),
-    ("Best-effort uptime, no guarantees. Solo mining is a fair lottery — we just sell you the ticket.",
-     ("Uptime sebaik mungkin, tanpa jaminan. Menambang solo adalah lotre yang adil — kami hanya menjual tiketnya.",
-      "ベストエフォートの稼働、保証なし。ソロは公平な宝くじ — 私たちはチケットを売るだけです。",
-      "พยายามให้ออนไลน์ที่สุด แต่ไม่รับประกัน การขุดโซโลคือลอตเตอรีที่ยุติธรรม — เราแค่ขายตั๋วให้คุณ",
-      "최선의 가동, 보장은 없음. 솔로는 공정한 복권입니다 — 우리는 티켓만 팔 뿐입니다.",
-      "尽力保证在线，但不作担保。单独挖矿是公平的彩票 — 我们只是卖票给你。",
-      "Cố gắng online tối đa, không bảo đảm. Solo là xổ số công bằng — chúng tôi chỉ bán vé.")),
+    ("Best-effort uptime, no guarantees. Solo mining is a fair lottery.",
+     ("Uptime sebaik mungkin, tanpa jaminan. Menambang solo adalah lotre yang adil.",
+      "ベストエフォートの稼働、保証なし。ソロは公平な宝くじ。",
+      "พยายามให้ออนไลน์ที่สุด แต่ไม่รับประกัน การขุดโซโลคือลอตเตอรีที่ยุติธรรม",
+      "최선의 가동, 보장은 없음. 솔로는 공정한 복권입니다.",
+      "尽力保证在线，但不作担保。单独挖矿是公平的彩票。",
+      "Cố gắng online tối đa, không bảo đảm. Solo là xổ số công bằng.")),
     ("No cookies, no trackers, no third-party assets — this page loads nothing from anyone but us.",
      ("Tanpa cookie, pelacak, atau aset pihak ketiga — halaman ini tidak memuat apa pun selain dari kami.",
       "クッキー・トラッカー・サードパーティ資産なし — このページは私たち以外から何も読み込みません。",
@@ -1108,8 +1057,6 @@ _TR_RAW = [
       "端口只决定你的<b>起始</b>难度。之后 vardiff 会自动调整，选最接近的即可。",
       "Cổng chỉ đặt độ khó <b>ban đầu</b>. Sau đó vardiff tự chỉnh, cứ chọn cái gần nhất.")),
     ("START HERE", ("MULAI DI SINI", "ここから", "เริ่มที่นี่", "여기서 시작", "从这里开始", "BẮT ĐẦU TẠI ĐÂY")),
-    ("Tiny &amp; hobby rigs, &lt; ~2 TH/s", ("Rig kecil &amp; hobi, &lt; ~2 TH/s", "小型・趣味リグ、&lt; ~2 TH/s", "เครื่องเล็ก &amp; งานอดิเรก &lt; ~2 TH/s", "소형 &amp; 취미 장비, &lt; ~2 TH/s", "小型 &amp; 业余设备，&lt; ~2 TH/s", "Giàn nhỏ &amp; nghiệp dư, &lt; ~2 TH/s")),
-    ("Home &amp; small-farm ASICs, ~2–200 TH/s", ("ASIC rumahan &amp; farm kecil, ~2–200 TH/s", "家庭・小規模ファームの ASIC、~2–200 TH/s", "ASIC ที่บ้าน &amp; ฟาร์มเล็ก ~2–200 TH/s", "가정 &amp; 소규모 팜 ASIC, ~2–200 TH/s", "家用 &amp; 小型矿场 ASIC，~2–200 TH/s", "ASIC gia đình &amp; trại nhỏ, ~2–200 TH/s")),
     ("Modern &amp; clustered ASICs, 200 TH/s+", ("ASIC modern &amp; klaster, 200 TH/s+", "最新・クラスタ ASIC、200 TH/s+", "ASIC รุ่นใหม่ &amp; แบบคลัสเตอร์ 200 TH/s+", "최신 &amp; 클러스터 ASIC, 200 TH/s+", "现代 &amp; 集群 ASIC，200 TH/s+", "ASIC hiện đại &amp; cụm, 200 TH/s+")),
     ("Start difficulty", ("Kesulitan awal", "開始難易度", "ความยากเริ่มต้น", "시작 난이도", "起始难度", "Độ khó ban đầu")),
     ("How to log in.", ("Cara login.", "ログイン方法。", "วิธีล็อกอิน", "로그인 방법.", "如何登录。", "Cách đăng nhập.")),
@@ -1123,12 +1070,11 @@ _TR_RAW = [
     ("History is building — check back after a bit of mining.", ("Riwayat sedang terbentuk — cek lagi setelah menambang sebentar.", "履歴を蓄積中です — 少し採掘してから再度ご確認ください。", "กำลังสะสมประวัติ — กลับมาดูอีกครั้งหลังขุดสักพัก", "기록을 쌓는 중입니다 — 잠시 채굴 후 다시 확인하세요.", "正在积累历史数据 — 挖矿一段时间后再回来查看。", "Đang tích lũy lịch sử — quay lại sau khi đào một lúc.")),
 ]
 TR = [(en, dict(zip(_LO, vals))) for en, vals in _TR_RAW]
-# Additional Asian languages — Malay (ms), Filipino (tl), Hindi (hi).
+# Additional languages — Malay (ms), Filipino (tl), Hindi (hi).
 # Keyed by the SAME English phrases as _TR_RAW so they merge into TR. First-pass
 # translations (crypto terms kept in English); worth a native review per language.
 _TR_ADD = {
- "Asia&#x27;s community solo Bitcoin pool": {"ms":"Pool solo Bitcoin komuniti Asia","tl":"Komunidad na solo Bitcoin pool ng Asya","hi":"एशिया का कम्युनिटी सोलो Bitcoin पूल"},
- "Asia's community solo Bitcoin pool": {"ms":"Pool solo Bitcoin komuniti Asia","tl":"Komunidad na solo Bitcoin pool ng Asya","hi":"एशिया का कम्युनिटी सोलो Bitcoin पूल"},
+ "Community solo Bitcoin pool": {"ms":"Pool solo Bitcoin komuniti","tl":"Komunidad na solo Bitcoin pool","hi":"कम्युनिटी सोलो Bitcoin पूल"},
  POOL_PITCH: {
    "ms":"Lombong ke alamat anda sendiri. Jumpa satu blok dan seluruh ganjaran jadi milik anda — ditolak yuran tetap 0%, dibayar terus kepada anda secara on-chain. Bukan kustodi: tiada akaun, tiada KYC, kami tidak pernah memegang koin anda.",
    "tl":"Magmina sa sarili mong address. Kapag may nahanap kang block, sa'yo ang buong reward — bawas lang ang flat 0% fee, diretsong bayad sa'yo on-chain. Non-custodial: walang account, walang KYC, hindi namin hawak ang coins mo.",
@@ -1175,11 +1121,6 @@ _TR_ADD = {
    "ms":"Tiada pendaftaran, e-mel, atau ID. Halakan pelombong ke arah kami dan anda terus masuk.",
    "tl":"Walang sign-up, email, o ID. Itutok ang miner sa amin at pasok ka na.",
    "hi":"कोई sign-up नहीं, email नहीं, ID नहीं। एक miner हमारी ओर लगाइए और आप शामिल।"},
- "For the Asian mining community.": {"ms":"Untuk komuniti perlombongan Asia.","tl":"Para sa Asian mining community.","hi":"एशियाई mining समुदाय के लिए।"},
- "A well-connected node close to home means your blocks reach the network fast.": {
-   "ms":"Node yang terhubung baik dan dekat membuatkan blok anda cepat sampai ke rangkaian.",
-   "tl":"Ang malapit at well-connected na node ay nangangahulugang mabilis na umaabot sa network ang blocks mo.",
-   "hi":"पास का और अच्छी तरह जुड़ा node मतलब आपके blocks जल्दी network तक पहुँचते हैं।"},
  "Transparent by default.": {"ms":"Telus secara lalai.","tl":"Transparent bilang default.","hi":"डिफ़ॉल्ट रूप से पारदर्शी।"},
  "The numbers on this page are the real ones — same hashrate, same odds, same blocks we see.": {
    "ms":"Angka di halaman ini adalah yang sebenar — hashrate, peluang, dan blok yang sama seperti yang kami lihat.",
@@ -1209,10 +1150,10 @@ _TR_ADD = {
    "ms":"Pilih port yang sepadan dengan peranti anda; vardiff uruskan selebihnya secara automatik.",
    "tl":"Piliin ang port na bagay sa gear mo; ang vardiff na ang bahala sa iba, automatic.",
    "hi":"अपने gear से मेल खाता port चुनें; बाक़ी vardiff अपने-आप संभाल लेता है।"},
- "Best-effort uptime, no guarantees. Solo mining is a fair lottery — we just sell you the ticket.": {
-   "ms":"Uptime sebaik mungkin, tanpa jaminan. Perlombongan solo ialah loteri adil — kami hanya menjual tiket.",
-   "tl":"Best-effort na uptime, walang garantiya. Patas na lottery ang solo mining — kami lang ang nagbebenta ng ticket.",
-   "hi":"यथासंभव uptime, कोई गारंटी नहीं। सोलो माइनिंग एक निष्पक्ष lottery है — हम बस टिकट बेचते हैं।"},
+ "Best-effort uptime, no guarantees. Solo mining is a fair lottery.": {
+   "ms":"Uptime sebaik mungkin, tanpa jaminan. Perlombongan solo ialah loteri adil.",
+   "tl":"Best-effort na uptime, walang garantiya. Patas na lottery ang solo mining.",
+   "hi":"यथासंभव uptime, कोई गारंटी नहीं। सोलो माइनिंग एक निष्पक्ष lottery है।"},
  "No cookies, no trackers, no third-party assets — this page loads nothing from anyone but us.": {
    "ms":"Tiada kuki, penjejak, atau aset pihak ketiga — halaman ini tidak memuatkan apa-apa selain daripada kami.",
    "tl":"Walang cookies, trackers, o third-party assets — wala itong nilo-load mula sa iba kundi sa amin.",
@@ -1222,8 +1163,6 @@ _TR_ADD = {
    "tl":"Itinatakda lang ng port ang <b>panimulang</b> difficulty mo. Awtomatikong ina-adjust ito ng vardiff pagkatapos, kaya piliin lang ang pinakamalapit.",
    "hi":"Port सिर्फ़ आपकी <b>शुरुआती</b> difficulty तय करता है। उसके बाद vardiff अपने-आप समायोजित करता है, बस सबसे क़रीबी चुनें।"},
  "START HERE": {"ms":"MULA DI SINI","tl":"MAGSIMULA DITO","hi":"यहाँ से शुरू करें"},
- "Tiny &amp; hobby rigs, &lt; ~2 TH/s": {"ms":"Rig kecil &amp; hobi, &lt; ~2 TH/s","tl":"Maliit &amp; hobby rigs, &lt; ~2 TH/s","hi":"छोटे &amp; hobby rigs, &lt; ~2 TH/s"},
- "Home &amp; small-farm ASICs, ~2–200 TH/s": {"ms":"ASIC rumah &amp; ladang kecil, ~2–200 TH/s","tl":"Home &amp; small-farm ASICs, ~2–200 TH/s","hi":"घरेलू &amp; small-farm ASICs, ~2–200 TH/s"},
  "Modern &amp; clustered ASICs, 200 TH/s+": {"ms":"ASIC moden &amp; berkelompok, 200 TH/s+","tl":"Modern &amp; clustered ASICs, 200 TH/s+","hi":"आधुनिक &amp; clustered ASICs, 200 TH/s+"},
  "Start difficulty": {"ms":"Kesukaran permulaan","tl":"Panimulang difficulty","hi":"शुरुआती difficulty"},
  "How to log in.": {"ms":"Cara log masuk.","tl":"Paano mag-login.","hi":"लॉगिन कैसे करें।"},
@@ -1297,19 +1236,19 @@ def render_landing(lang="en"):
 
     page = """<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SoloLuck — Asia's community solo Bitcoin pool</title>
+<title>SoloLuck — Community solo Bitcoin pool</title>
 <meta name="description" content="%(desc)s">
-<meta name="keywords" content="solo mining pool, Bitcoin solo pool, Asia mining pool, solo ckpool, true solo Bitcoin, non-custodial mining, Indonesia Bitcoin pool, Bitaxe NerdQAxe pool">
+<meta name="keywords" content="solo mining pool, Bitcoin solo pool, solo ckpool, true solo Bitcoin, non-custodial mining, Bitaxe NerdQAxe pool">
 <meta name="theme-color" content="#0b0e14">
 <link rel="canonical" href="%(canon)s">%(hreflang)s
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SoloLuck">
-<meta property="og:title" content="SoloLuck — Asia's community solo Bitcoin pool">
+<meta property="og:title" content="SoloLuck — Community solo Bitcoin pool">
 <meta property="og:description" content="%(desc)s">
 <meta property="og:url" content="%(canon)s">
 <meta property="og:locale" content="%(oglocale)s">%(oglocale_alt)s
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SoloLuck — Asia's community solo Bitcoin pool">
+<meta name="twitter:title" content="SoloLuck — Community solo Bitcoin pool">
 <meta name="twitter:description" content="%(desc)s">
 <meta property="og:image" content="https://sololuck.io/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
@@ -1405,7 +1344,6 @@ def render_landing(lang="en"):
     <li><b>Truly solo.</b> You mine to your own address. If you find a block, the whole reward is yours — the fee is 0%%.</li>
     <li><b>Non-custodial.</b> We never hold your coins. There's nothing to withdraw and nothing for us to lose.</li>
     <li><b>No account, no KYC.</b> No sign-up, no email, no ID. Point a miner at us and you're in.</li>
-    <li><b>For the Asian mining community.</b> A well-connected node close to home means your blocks reach the network fast.</li>
     <li><b>Transparent by default.</b> The numbers on this page are the real ones — same hashrate, same odds, same blocks we see.</li>
   </ul>
 </div>
@@ -1438,7 +1376,7 @@ def render_landing(lang="en"):
 <div class="card">
   <h2>FAQ</h2>
   <details><summary>What is solo mining?</summary><p class="muted">You mine for whole blocks on your own. No small steady payouts — but if your miner solves a block, the <b>entire</b> reward (~3.125 BTC + fees) is yours, paid straight to your address. A lottery with a very big prize.</p></details>
-  <details><summary>Why SoloLuck instead of going solo at home?</summary><p class="muted">We keep a fast, well-connected node close to Asia, so a block you find reaches the network instantly (less orphan risk). You skip running and syncing your own node — just point your miner at us.</p></details>
+  <details><summary>Why SoloLuck instead of going solo at home?</summary><p class="muted">We keep a fast, well-connected node, so a block you find reaches the network instantly (less orphan risk). You skip running and syncing your own node — just point your miner at us.</p></details>
   <details><summary>What does SoloLuck charge?</summary><p class="muted">Nothing — the fee is 0%%. A block <i>you</i> solve pays its whole reward to your own address, inside that block's own coinbase, on-chain and in the open. We never hold your coins.</p></details>
   <details><summary>What username / password do I use?</summary><p class="muted">Your own BTC address (bech32 <code>bc1q…</code>) as the username. Add <code>.workername</code> to track multiple rigs (e.g. <code>bc1q….rig1</code>). The password can be anything.</p></details>
   <details><summary>What hardware works?</summary><p class="muted">Any SHA-256 ASIC — Bitaxe, NerdQAxe, Avalon, Antminer and the like. Pick the port that matches your hashrate; vardiff tunes the rest. ~100 GH/s is a sensible minimum.</p></details>
@@ -1453,12 +1391,12 @@ def render_landing(lang="en"):
     <li>Minimum ~100 GH/s recommended — below that the lottery odds round to zero.</li>
     <li>Pick the port that matches your gear; vardiff handles the rest automatically.</li>
     <li>Please keep CPU / GPU / nerdminer toys on the Lite port — the heavier tiers are for real hardware.</li>
-    <li>Best-effort uptime, no guarantees. Solo mining is a fair lottery — we just sell you the ticket.</li>
+    <li>Best-effort uptime, no guarantees. Solo mining is a fair lottery.</li>
     <li>No cookies, no trackers, no third-party assets — this page loads nothing from anyone but us.</li>
   </ul>
 </div>
 
-<footer>SoloLuck · Asia's community solo Bitcoin pool · non-custodial · 0%% fee</footer>
+<footer>SoloLuck · Community solo Bitcoin pool · non-custodial · 0%% fee</footer>
 </div>
 <script>
 function fmt(x){return (x===null||x===undefined||x==='')?'—':x;}
@@ -1775,11 +1713,11 @@ def _user_shell(safe_addr, body, lang="en"):
 <title>%(addr)s — SoloLuck</title><link rel="icon" type="image/svg+xml" href="/favicon.svg"><style>%(css)s</style></head><body>
 <div class="wrap">
 <header><h1 class="brand"><span class="b">Solo</span>Luck</h1>
-<p class="tagline">Asia's community solo Bitcoin pool</p>
+<p class="tagline">Community solo Bitcoin pool</p>
 <p class="pitch mono" style="word-break:break-all"><a href="https://mempool.space/address/%(addr)s" target="_blank" rel="noopener">%(addr)s</a></p>
 <p class="muted"><a href="%(back)s">← back to pool</a></p></header>
 %(body)s
-<footer>SoloLuck · Asia's community solo Bitcoin pool · non-custodial · 0%% fee</footer>
+<footer>SoloLuck · Community solo Bitcoin pool · non-custodial · 0%% fee</footer>
 </div></body></html>""" % {"addr": safe_addr, "css": PAGE_CSS, "body": body, "back": back}
     if lang != "en":
         page = _translate(page, lang)
