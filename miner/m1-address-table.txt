@@ -1,0 +1,41 @@
+case                         app      node     address                                                        message shown
+DGB P2PKH v30 (D…)           ACCEPT   ACCEPT   DCoBpuV6GkVcMRTFNpmXWtoua1THAvjmG4                             ✓ Valid DigiByte address — P2PKH (D…)
+DGB P2SH v63 (S…)            ACCEPT   ACCEPT   SUx6KVKbhhnXLj47Bfm3X2nsLexQdnPqTo                             ✓ Valid DigiByte address — P2SH (S…)
+DGB bech32 v0 p2wpkh         ACCEPT   ACCEPT   dgb1q2073ndgpkaugj3kq2x6erys69ynwwf2xpppkef                    ✓ Valid DigiByte address — SegWit dgb1q
+DGB bech32 v0 p2wsh          ACCEPT   ACCEPT   dgb1q5yxrxjntp77djraat0nk8206stnuwk7p0zzrv7xzdg3ykj6kmemsrfjdu ✓ Valid DigiByte address — SegWit dgb1q (script)
+DGB bech32m v1 taproot       ACCEPT   ACCEPT   dgb1p5yxrxjntp77djraat0nk8206stnuwk7p0zzrv7xzdg3ykj6kmemsf7jyy ✓ Valid DigiByte address — Taproot dgb1p
+DGB bech32 ALL UPPERCASE     ACCEPT   ACCEPT   DGB1Q2073NDGPKAUGJ3KQ2X6ERYS69YNWWF2XPPPKEF                    ✓ Valid DigiByte address — SegWit dgb1q
+DGB real on-chain address    ACCEPT   ACCEPT   DQRBAufN9MAfcxjjGGkAW2Dbc4pL4zA67U                             ✓ Valid DigiByte address — P2PKH (D…)
+DGB real on-chain address 2  ACCEPT   ACCEPT   DFf3P5fE4ckcQnCTdvNtbmUjdL24gXZMVr                             ✓ Valid DigiByte address — P2PKH (D…)
+DGB real on-chain P2SH       ACCEPT   ACCEPT   SitRGK7a6ueijrqvfgCjhhSJg12SFSaY5T                             ✓ Valid DigiByte address — P2SH (S…)
+DGB P2PKH with whitespace    ACCEPT   ACCEPT     DCoBpuV6GkVcMRTFNpmXWtoua1THAvjmG4 
+                         ✓ Valid DigiByte address — P2PKH (D…)
+HRP shadow DGB…              refuse   refuse   DGBrGR4tjb16U69diut36C6ULfDjyud1Tk                             ✗ Not a valid DigiByte address — DigiByte Core itself refuses addresses starting "DGB" — use another receiving address from your wallet
+HRP shadow DGb…              refuse   refuse   DGbGQt2RpRTNgfzGUDw7NAjj5ZhfTzK73o                             ✗ Not a valid DigiByte address — DigiByte Core itself refuses addresses starting "DGB" — use another receiving address from your wallet
+HRP shadow, on-chain         refuse   refuse   DGBpYt3qchjgnLBMVYzSK7B33vxccCAoA9                             ✗ Not a valid DigiByte address — DigiByte Core itself refuses addresses starting "DGB" — use another receiving address from your wallet
+near-miss DGA… (valid)       ACCEPT   ACCEPT   DGAAraNbHMYoiZnsJG7de6NEqKa8XvkcBQ                             ✓ Valid DigiByte address — P2PKH (D…)
+near-miss DGC… (valid)       ACCEPT   ACCEPT   DGCBtCm4YdrNoaqYWiYJ7VCYhV2pSfA4F6                             ✓ Valid DigiByte address — P2PKH (D…)
+near-miss DHB… (valid)       ACCEPT   ACCEPT   DHBPdC9SHbRT1aUq6AvdVkXy6K3TnZohYz                             ✓ Valid DigiByte address — P2PKH (D…)
+DOGE P2PKH (same v30)        ACCEPT   ACCEPT   DCoBpuV6GkVcMRTFNpmXWtoua1THAvjmG4                             ✓ Valid DigiByte address — P2PKH (D…)
+BTC legacy 1… (v0)           refuse   refuse   18f6HeYSyLbKpRGeeEmxy8eJgsiyoPQwSB                             ✗ Not a valid DigiByte address — that is a Bitcoin address (legacy 1…)
+BTC P2SH 3… (v5)             refuse   refuse   39M7DC2tXEuhuay5mLSZPm1EqQ1hQKGPcy                             ✗ Not a valid DigiByte address — that is a Bitcoin address (P2SH 3…) — DigiByte does not use version 5
+BTC bech32 bc1q              refuse   refuse   bc1q2073ndgpkaugj3kq2x6erys69ynwwf2xk69wp8                     ✗ Not a valid DigiByte address — that is a Bitcoin address — paste your DigiByte address
+BTC taproot bc1p             refuse   refuse   bc1p5yxrxjntp77djraat0nk8206stnuwk7p0zzrv7xzdg3ykj6kmems55kxmy ✗ Not a valid DigiByte address — that is a Bitcoin address — paste your DigiByte address
+BCH CashAddr bare q…         refuse   refuse   qr6m7j9njldwwzlg9v7v53unlr4jkmx6eylep8ekg2                     ✗ Not a valid DigiByte address — that is a Bitcoin Cash address — paste your DigiByte address
+BCH CashAddr prefixed        refuse   refuse   bitcoincash:qr6m7j9njldwwzlg9v7v53unlr4jkmx6eylep8ekg2         ✗ Not a valid DigiByte address — that is a Bitcoin Cash address — paste your DigiByte address
+BCH CashAddr P2SH p…         refuse   refuse   ppm2qsznhks23z7629mms6s4cwef74vcwvn0h829pq                     ✗ Not a valid DigiByte address — that is a Bitcoin Cash address — paste your DigiByte address
+DGB testnet dgbt1            refuse   refuse   dgbt1q2073ndgpkaugj3kq2x6erys69ynwwf2x5ttwyy                   ✗ Not a valid DigiByte address — that is a DigiByte TESTNET address — this pool is mainnet
+BTC testnet tb1              refuse   refuse   tb1q2073ndgpkaugj3kq2x6erys69ynwwf2xuu7a65                     ✗ Not a valid DigiByte address — that is a Bitcoin address — paste your DigiByte address
+testnet base58 (v111)        refuse   refuse   moB3ahdRnN2abXkGMokLo3rdYsKgkz4YYp                             ✗ Not a valid DigiByte address — that is a testnet address
+Litecoin L… (v48)            refuse   refuse   LSt3YrrH3zqP5DxopNmGF9i4u66FtzvLUk                             ✗ Not a valid DigiByte address — that is a Litecoin address (L…)
+Litecoin P2SH M… (v50)       refuse   refuse   MFZFX5SrUMm8i6EysDRuDQFeA6c9JYJ3vS                             ✗ Not a valid DigiByte address — that is a Litecoin P2SH address (M…)
+Dogecoin P2SH 9… (v22)       refuse   refuse   9z6Mx36nbJnboxLZBU6ydtdcXyPjUrkx6q                             ✗ Not a valid DigiByte address — that is a Dogecoin P2SH address (9…/A…)
+unknown version byte 88      refuse   refuse   cYQAwCmoTDNRnZYGoA61eAbY5GPzNaqaD9                             ✗ Not a valid DigiByte address — not a DigiByte address (unknown version byte 88)
+Ethereum 0x…                 refuse   refuse   0x52908400098527886E0F7030069857D2E4169EE7                     ✗ Not a valid DigiByte address — that looks like an Ethereum address
+garbage                      refuse   refuse   not-an-address                                                 ✗ Not a valid DigiByte address — invalid character '-'
+empty                        refuse   refuse                                                                  ✗ Not a valid DigiByte address — empty
+D… one-char typo             refuse   refuse   DCoBpuV6GkVcMRTFNpmXWtoua1THAvjmGA                             ✗ Not a valid DigiByte address — checksum failed — typo?
+dgb1 one-char typo           refuse   refuse   dgb1q2073ndgpkaugj3kq2x6erys69ynwwf2xpppkeq                    ✗ Not a valid DigiByte address — checksum failed — typo?
+dgb1 MiXeD case              refuse   refuse   DGB1Q2073ndgpkaugj3kq2x6erys69ynwwf2xpppkef                    ✗ Not a valid DigiByte address — mixed upper/lower case
+dgb1 bad character           refuse   refuse   dgb1q2073ndgpkaugj3kq2x6erys69ynwwf2xpppbef                    ✗ Not a valid DigiByte address — invalid character 'b'
+too short                    refuse   refuse   Dabc                                                           ✗ Not a valid DigiByte address — too short

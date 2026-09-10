@@ -46,7 +46,7 @@ ENGINE_DIR_NAME = "SoloLuckMiner-engine"
 # line, so this is 1.11.1 — not 1.11.0, which the betas already sort inside.
 # Every v1.10.1 user auto-downloads and auto-installs this while idle, so
 # nothing unfinished may ride in it.
-APP_VERSION = "1.11.2"
+APP_VERSION = "1.11.3"
 CHANGELOG_URL = "https://sololuck.io/changelog"
 # ── coins ────────────────────────────────────────────────────────────────────
 # ONE Windows app with a coin selector (Bitcoin, Bitcoin Cash, DigiByte).
@@ -75,8 +75,12 @@ _CHAIN_BTC = {
     # nothing behaves exactly like v1.11.1 did.
     # ⛔ Bitcoin only. Bitcoin Cash and DigiByte have one pool each and carry no
     # "doors" key at all, so resolve_host() hands back their "host" untouched.
-    "doors": (("sololuck.io", "Jakarta"),
-              ("us.stratum.sololuck.io", "Phoenix")),
+    # ⭐ The label is what the user reads ("the Asia pool", "the US pool"), so it
+    # names the REGION, not the city: it matches how the site names its endpoints
+    # (sg./us.) and means something to a reader who has never heard of either
+    # datacentre.
+    "doors": (("sololuck.io", "Asia"),
+              ("us.stratum.sololuck.io", "US")),
     "beta": False,
     "start_note": None,
     "idle": "A found block pays its whole reward to this address.",
@@ -367,7 +371,7 @@ def door_summary(chain="btc"):
     rows = st["results"]
     win = st["picked"]
     if not win:
-        return "latency check failed · using the default door"
+        return "latency check failed · using the default pool"
     others = ["%s %s" % (r["label"], ("%.0f ms" % r["ms"]) if r["ms"] is not None
                          else "no answer")
               for r in rows if r is not win]
@@ -2263,7 +2267,7 @@ class MinerApp:
         self._apply_chain_labels()     # repaint with the door that won
         win = st.get("picked")
         if st.get("results"):
-            self._logln("Latency check — SoloLuck answers Bitcoin in two places:", MUTED)
+            self._logln("Latency check — SoloLuck has two Bitcoin pools:", MUTED)
         for r in st.get("results") or []:
             self._logln("  %-8s %-24s %s" % (
                 r["label"], r["host"],
@@ -2281,15 +2285,15 @@ class MinerApp:
                        and win["ms"] is not None and r["ms"] < win["ms"]]
             if quicker:
                 q = min(quicker, key=lambda r: r["ms"])
-                self._logln("Bitcoin will mine to the %s door (%s) — %s answered "
+                self._logln("Bitcoin will mine to the %s pool (%s) — %s answered "
                             "%.0f ms quicker, too little to be worth moving for."
                             % (win["label"], win["host"], q["label"],
                                win["ms"] - q["ms"]), MUTED)
             else:
-                self._logln("Bitcoin will mine to the %s door (%s) — the quickest "
+                self._logln("Bitcoin will mine to the %s pool (%s) — the quickest "
                             "to answer." % (win["label"], win["host"]), MUTED)
         elif st.get("results"):
-            self._logln("Neither Bitcoin door answered the latency check — Bitcoin "
+            self._logln("Neither Bitcoin pool answered the latency check — Bitcoin "
                         "will use %s." % CHAINS["btc"]["host"], MUTED)
 
     # ---------- engine resolution (off the UI thread) ----------
@@ -2849,7 +2853,7 @@ def _minetest(seconds, addr, threads):
     w("engine: %s" % eng)
     _mt_host = resolve_host(CHAIN, wait=20.0)
     if CHAIN_DEF.get("doors"):
-        w("door: %s" % door_summary(CHAIN))
+        w("pool: %s" % door_summary(CHAIN))
     url = "stratum+tcp://%s:%s" % (_mt_host, CHAIN_DEF["port"])
     cmd = [eng, "-a", ALGO, "-o", url, "-u", "%s.%s" % (addr, "bundletest"), "-p", "x", "-t", str(threads)]
     w("cmd: %s" % " ".join(cmd))
@@ -2929,13 +2933,13 @@ def _cpuinfo():
 
 def _doors():
     """Run the latency check and report it. For support: "run this and send me
-    the file" answers "which pool should I be on?" in one line.
+    the file" answers "which server should I be on?" in one line.
 
     🔴 Writes to a FILE as well as stdout. The shipped build is --noconsole, so
     it has no stdout at all — a print-only diagnostic is invisible in exactly
     the build a user would run it from. --selftest and --minetest write files
     for the same reason."""
-    out = os.path.join(app_dir(), "sololuck_doors.txt")
+    out = os.path.join(app_dir(), "sololuck_pools.txt")
     lines = []
     def w(s=""):
         lines.append(str(s))
@@ -2949,7 +2953,7 @@ def _doors():
             w("%-14s %s:%s  (one pool — nothing to choose)"
               % (c["name"], c["host"], c["port"]))
             continue
-        w("%s — measuring %d doors on port %s"
+        w("%s — measuring %d pools on port %s"
           % (c["name"], len(c["doors"]), c["port"]))
         rows = measure_doors(c["doors"], c["port"])
         win = pick_door(rows)
@@ -2960,7 +2964,7 @@ def _doors():
                  "%d/%d ok" % (r["ok"], r["tried"])
                  + ((" — " + r["err"]) if r["err"] else "")))
         w("  -> %s" % (("%s (%s)" % (win["label"], win["host"])) if win
-                       else "no door answered — would use " + c["host"]))
+                       else "no pool answered — would use " + c["host"]))
     try:
         open(out, "w", encoding="utf-8").write("\n".join(lines) + "\n")
         print("\nwrote %s" % out)
@@ -2975,7 +2979,9 @@ def main():
     if "--cpuinfo" in sys.argv:
         _cpuinfo()
         return
-    if "--doors" in sys.argv:
+    # ⭐ --doors is the name this shipped under in v1.11.2 and stays accepted;
+    # everything the user reads says "pool", so that is the documented flag.
+    if "--pools" in sys.argv or "--doors" in sys.argv:
         _doors()
         return
     if "--minetest" in sys.argv:

@@ -318,12 +318,13 @@ class TestStableRelease(unittest.TestCase):
                 self.assertNotIn("8081", open(p, encoding="utf-8").read(),
                                  "%s names the retired port" % extra)
         allowed = {("sololuck.io", "3335"),
-                   # the Phoenix Bitcoin door, added 2026-09-10
+                   # the US Bitcoin pool, added 2026-09-10
                    ("us.stratum.sololuck.io", "3335"),
                    ("bch.sololuck.io", "3333"),
                    ("digibyte.sololuck.io", "3340")}
         # ⭐ Doors count. This guard exists so no unsanctioned endpoint can reach a
         # user, and since 1.11.2 a door is an endpoint the app will really mine to.
+        # ("door" is our internal word; on screen every one of these is a "pool".)
         seen = {(c["host"], c["port"]) for c in _present_chains(M).values()}
         for c in _present_chains(M).values():
             for host, _label in (c.get("doors") or ()):

@@ -35,8 +35,8 @@ mining engine…".
   app says which chain it actually belongs to.
 - **Worker name** — anything (e.g. `pc`).
 - The pool endpoint is **never typed** — the app sets it per coin. Bitcoin Cash always
-  uses `bch.sololuck.io:3333`. Bitcoin has two places to answer, so at launch the app
-  times both and uses the nearer one (see **Choosing a Bitcoin door** below).
+  uses `bch.sololuck.io:3333`. Bitcoin has two pools, so at launch the app times both and
+  uses the nearer one (see **Choosing a Bitcoin pool** below).
 - Pick a **CPU load** (starts gentle at 25%; 100% is opt-in and will slow your PC).
 - Click **Start Mining**. The selected engine shows under the stats.
 
@@ -104,39 +104,39 @@ Manual: `brew install autoconf automake libtool pkg-config curl jansson`, build
 
 ---
 
-## Choosing a Bitcoin door
+## Choosing a Bitcoin pool
 
-SoloLuck answers Bitcoin stratum in two places: **Jakarta** (`sololuck.io`) and **Phoenix**
-(`us.stratum.sololuck.io`). Both are real pools with their own node, and
-`sololuck.io/users/<address>` shows your hashrate whichever one you are on.
+SoloLuck runs two Bitcoin pools: the **Asia pool** (`sololuck.io`) and the **US pool**
+(`us.stratum.sololuck.io`). Each has its own node, and `sololuck.io/users/<address>`
+shows your hashrate whichever one you are on.
 
 At launch the app opens a TCP connection to each, times the handshake three times, and
-sends a `mining.subscribe` to confirm a live pool is behind the port. The quicker door
-wins and its name and measurement appear beside the endpoint on screen.
+sends a `mining.subscribe` to confirm a live pool is behind the port. The quicker one
+wins, and its name and measurement appear beside the endpoint on screen.
 
 - **Bitcoin only.** Bitcoin Cash has one pool, so there is nothing to choose.
 - **It never blocks you.** The check runs in the background while you paste your address.
-- **It fails safe.** If DNS fails, if neither door answers, or if the check has not
+- **It fails safe.** If DNS fails, if neither pool answers, or if the check has not
   finished when you press Start, the app uses `sololuck.io` — exactly what earlier
   versions always used.
-- **It does not flap.** Phoenix has to be both 15% and 10 ms quicker before it takes over
-  from the default, so a near-tie does not move you back and forth between runs.
+- **It does not flap.** The US pool has to be both 15% and 10 ms quicker before it takes
+  over from the default, so a near-tie does not move you back and forth between runs.
 
 To see the measurement without opening the app:
 
 ```
-SoloLuckMiner.exe --doors
+SoloLuckMiner.exe --pools
 ```
 
-It writes `sololuck_doors.txt` next to the app (the app is built without a console, so
+It writes `sololuck_pools.txt` next to the app (the app is built without a console, so
 there is nothing to read on screen).
 
 ---
 
 ## About SoloLuck (the pool)
-[SoloLuck](https://sololuck.io) is a public **true-solo** Bitcoin pool. It answers Bitcoin
-stratum in two places — Jakarta and Phoenix — so there is a short hop from most of the
-world; you do not have to pick one, the app measures. You mine with your **own** BTC address as
+[SoloLuck](https://sololuck.io) is a public **true-solo** Bitcoin pool. It runs two Bitcoin
+pools — Asia and US — so there is a short hop from most of the world; you do not have to
+pick one, the app measures. You mine with your **own** BTC address as
 the username; if you solve a block, the network pays the full reward straight to you. The only
 fee is **0% — finders keepers**; solve a block and the whole reward is yours. Non-custodial —
 no account, no KYC.
