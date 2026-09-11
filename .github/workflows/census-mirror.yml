@@ -1,0 +1,96 @@
+# Mirror the Solo Mining Census exports from sololuck.io into data/census/.
+#
+# Downloads ONLY what https://sololuck.io/api/census/v1/ already publishes and
+# commits when something changed. It never contacts a mining pool: all pool
+# reads happen on sololuck.io's own collector, never from GitHub's runners.
+#
+# Frozen editions are never rewritten here either: a copy that no longer matches
+# the site's published sha256 stops the run instead of being overwritten.
+name: census-mirror
+
+on:
+  schedule:
+    - cron: "37 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: census-mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download the census exports (sololuck.io only)
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, re, sys, urllib.error, urllib.request
+
+          BASE = "https://sololuck.io/api/census/v1/"
+          OUT = "data/census"
+          UA = "sololuck-census-mirror (+https://github.com/sololuckio/sololuck)"
+
+          def get(url):
+              req = urllib.request.Request(url, headers={"User-Agent": UA})
+              with urllib.request.urlopen(req, timeout=60) as r:
+                  return r.read()
+
+          def sha(b):
+              return hashlib.sha256(b).hexdigest()
+
+          try:
+              cur = get(BASE + "current.json")
+          except urllib.error.HTTPError as e:
+              if e.code == 503:
+                  print("The census has not been collected yet; nothing to mirror.")
+                  sys.exit(0)
+              raise
+          doc = json.loads(cur)
+          if doc.get("ok") is not True or doc.get("license") != "CC BY 4.0":
+              sys.exit("current.json is not the census document; refusing to mirror it")
+
+          os.makedirs(os.path.join(OUT, "editions"), exist_ok=True)
+          with open(os.path.join(OUT, "latest.json"), "wb") as f:
+              f.write(cur)
+
+          added = 0
+          for e in doc.get("editions") or []:
+              eid = str(e.get("id") or "")
+              if not re.match(r"^\d{4}-W\d{2}(-r[0-9]{1,2})?$", eid):
+                  sys.exit("unexpected edition id %r" % eid)
+              for ext in ("json", "csv"):
+                  want = e.get(ext + "_sha256")
+                  path = os.path.join(OUT, "editions", "%s.%s" % (eid, ext))
+                  if os.path.exists(path):
+                      with open(path, "rb") as f:
+                          have = sha(f.read())
+                      if want and have != want:
+                          sys.exit("%s differs from the published sha256 (%s != %s); an edition "
+                                   "is never rewritten, so this needs a person" % (path, have, want))
+                      continue
+                  body = get(BASE + "editions/%s.%s" % (eid, ext))
+                  if not want or sha(body) != want:
+                      sys.exit("%s.%s did not match its published sha256; not saved" % (eid, ext))
+                  with open(path, "wb") as f:
+                      f.write(body)
+                  added += 1
+          print("latest.json refreshed; %d edition file(s) added" % added)
+          PY
+
+      - name: Commit on change
+        run: |
+          git add data/census
+          if git diff --cached --quiet; then
+            echo "No change."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "census: mirror sololuck.io exports ($(date -u +%Y-%m-%d))"
+          git push
