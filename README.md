@@ -1,9 +1,12 @@
 # SoloLuck — public solo-pool stats page
 
-The single-file, dependency-free web front-end that powers [sololuck.io](https://sololuck.io/?ref=github) —
-a true-solo Bitcoin mining pool. Published in the *don't-trust-verify* spirit: this is the exact
-code that serves the public page, so anyone can audit what it shows and confirm it loads **nothing
-from anyone but us** (no cookies, no trackers, no third-party assets, no analytics).
+A June 2026 snapshot of the single-file, dependency-free web front-end behind
+[sololuck.io](https://sololuck.io/?ref=github), a true-solo Bitcoin mining pool.
+
+> **This is not the code serving sololuck.io today.** The live site has grown to roughly thirteen
+> times this file's size since the snapshot. Read this as a small, auditable reference for how the
+> stats page works — standard library only, and this code loads **nothing from anyone but us**
+> (no cookies, no trackers, no third-party assets, no analytics) — not as a copy of production.
 
 ## What it is
 
