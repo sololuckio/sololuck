@@ -14,7 +14,34 @@ set -uo pipefail
 POOL_HOST="stratum.sololuck.io"
 POOL_PORT="3335"            # Nano tier (difficulty 1) — tuned for CPUs
 ALGO="sha256d"
+POOL_PASS="x"
 WORKER="linux"
+
+# ── which chain ───────────────────────────────────────────────────────────────
+# Bitcoin Cash is the same proof of work on a smaller network, so the engine and
+# ALGO above are unchanged -- only the door and the address form differ.
+# 🔴 A legacy 1…/3… address is valid on BOTH chains, so --bch requires the bare
+# CashAddr form. Accepting legacy here would let someone mine Bitcoin while
+# believing they were mining Bitcoin Cash, with no error at all.
+CHAIN="btc"; ADDR=""
+for _a in "$@"; do
+  case "$_a" in
+    --bch|--bitcoincash) CHAIN="bch" ;;
+    --btc|--bitcoin)     CHAIN="btc" ;;
+    -*)                  ;;
+    *) [ -z "$ADDR" ] && ADDR="$_a" ;;
+  esac
+done
+if [ "$CHAIN" = "bch" ]; then
+  POOL_HOST="bch.sololuck.io"; POOL_PORT="3333"; WORKER="linux-bch"
+  # One Bitcoin Cash port serves every size of machine and starts each at
+  # difficulty 1,024 -- hours per share for a CPU, and the pool only lowers a
+  # difficulty after it has seen shares. "d=1" asks for the pool floor instead.
+  POOL_PASS="d=1"
+  COIN="Bitcoin Cash"; ADDR_HINT="bare CashAddr — starts q… or p…"
+else
+  COIN="Bitcoin";      ADDR_HINT="bc1q…"
+fi
 WORKDIR="$HOME/.sololuck-miner"
 
 c_y(){ printf '\033[1;33m%s\033[0m\n' "$*"; }
@@ -22,7 +49,7 @@ c_r(){ printf '\033[1;31m%s\033[0m\n' "$*" >&2; }
 c_g(){ printf '\033[1;32m%s\033[0m\n' "$*"; }
 
 c_y "── SoloLuck · Linux CPU solo miner ─────────────────────────────"
-echo "Mines Bitcoin (CPU) solo to YOUR address via $POOL_HOST:$POOL_PORT."
+echo "Mines $COIN (CPU) solo to YOUR address via $POOL_HOST:$POOL_PORT."
 echo "Solo mining is a long shot — a CPU's hashrate is tiny, so think of it as a"
 echo "cheap, low-power experiment. If your machine solves a block, the whole reward"
 echo "is entirely yours — 0% fee — paid on-chain to your address. No account."
@@ -33,15 +60,25 @@ ARCH="$(uname -m)"   # x86_64 | aarch64 | armv7l …
 echo "Detected: Linux on $ARCH"
 
 # ── BTC payout address ────────────────────────────────────────────────────────
-ADDR="${1:-}"
 if [ -z "$ADDR" ]; then
-  printf "Paste your Bitcoin payout address (bc1q…): "
+  printf "Paste your %s payout address (%s): " "$COIN" "$ADDR_HINT"
   read -r ADDR < /dev/tty || true
 fi
-case "$ADDR" in
-  bc1*|1*|3*) : ;;
-  *) c_r "That doesn't look like a Bitcoin address. Aborting."; exit 1 ;;
-esac
+if [ "$CHAIN" = "bch" ]; then
+  case "$ADDR" in
+    q*|p*) : ;;
+    bitcoincash:*) c_r "Drop the 'bitcoincash:' prefix — some miner firmware rejects the colon. Aborting."; exit 1 ;;
+    bc1*) c_r "That is a Bitcoin address, not a Bitcoin Cash one. Aborting."; exit 1 ;;
+    1*|3*) c_r "A legacy 1…/3… address is valid on BOTH chains, so it cannot say which you meant. Use the bare CashAddr form (q… or p…). Aborting."; exit 1 ;;
+    *) c_r "That doesn't look like a Bitcoin Cash address. Aborting."; exit 1 ;;
+  esac
+else
+  case "$ADDR" in
+    bc1*|1*|3*) : ;;
+    q*|p*) c_r "That looks like a Bitcoin Cash address. Re-run with --bch to mine Bitcoin Cash. Aborting."; exit 1 ;;
+    *) c_r "That doesn't look like a Bitcoin address. Aborting."; exit 1 ;;
+  esac
+fi
 
 # ── locate an already-installed engine ────────────────────────────────────────
 find_engine(){
@@ -150,4 +187,4 @@ c_g "Engine ready: $ENGINE"
 c_g "Mining to ${ADDR}.${WORKER} on $POOL_HOST:$POOL_PORT  (Ctrl-C to stop)"
 echo "CPU load: 75% (${THREADS} of ${NCPU} threads, low priority - will not fight your real work)"
 echo
-exec nice -n 10 "$ENGINE" -a "$ALGO" -o "stratum+tcp://$POOL_HOST:$POOL_PORT" -u "${ADDR}.${WORKER}" -p x -t "$THREADS"
+exec nice -n 10 "$ENGINE" -a "$ALGO" -o "stratum+tcp://$POOL_HOST:$POOL_PORT" -u "${ADDR}.${WORKER}" -p "$POOL_PASS" -t "$THREADS"

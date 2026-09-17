@@ -370,14 +370,13 @@ class TestStableRelease(unittest.TestCase):
                 ("def window_geometry", "screen-aware sizing"),
                 ("_on_wheel", "mouse wheel"),
                 ("_vbar_shown", "conditional scrollbar"),
-                ('pw = "x"', "no d= password"),
+                ("pw = stratum_password(chain)", "per-coin stratum password"),
                 ("validate_dgb_address", "DigiByte validator"),
                 ("chain_cfg_path", "per-coin settings files"),
                 ("chain_enabled(CHAIN)", "the --minetest gate"),
                 ("-ExclusionProcess '%s", "scoped Defender exclusion")):
             self.assertIn(needle, src, "missing: " + why)
         self.assertNotIn("only this folder is skipped", src)
-        self.assertNotIn('"d=1"', src)
 
 
 class TestCoinBoundaries(unittest.TestCase):
@@ -410,7 +409,7 @@ class TestCoinBoundaries(unittest.TestCase):
     # Every coin carries these. A coin missing one is a bug.
     _REQUIRED_COIN_FIELDS = ("name", "ticker", "host", "port", "addr_label",
                              "hint", "example", "stats_url", "beta",
-                             "start_note", "idle")
+                             "start_note", "idle", "password")
     # ⭐ Per-coin BY DESIGN, so it may not be on every coin — but nothing else may
     # be. Bitcoin answers stratum in two places; the other coins have one pool
     # each and must not carry this key at all.
@@ -557,19 +556,41 @@ class TestCoinBoundaries(unittest.TestCase):
                      "five times", "5x", "income", "guarantee"):
             self.assertNotIn(word, blob)
 
-    def test_no_false_difficulty_claim(self):
-        """⚠️ An earlier build claimed the app asks the pool for difficulty 1 so
-        shares register within minutes. Probed live: the port answers 1024 either
-        way, and "d=" is a one-way ratchet."""
-        blob = " ".join(str(v) for c in _present_chains(M).values()
-                        for v in c.values()).lower()
-        for phrase in ("difficulty 1,", "asks the pool for difficulty",
-                       "shares register within minutes", "d=1"):
-            self.assertNotIn(phrase, blob)
+    def test_bitcoin_cash_asks_for_its_floor_difficulty(self):
+        """🔴 Bitcoin Cash has one port for every machine and starts each
+        connection at 1,024 — about ten hours per share for a 125 MH/s PC, and the
+        pool cannot lower a difficulty it has seen no shares at. Re-probed on the
+        live pool 2026-09-17: "d=1" → 1,024 then 1; "x" → 1,024 only.
+        v1.11.1–v1.11.4 sent "x", and a real miner's PC sat on Bitcoin Cash for an
+        hour and a half without one share reaching the pool."""
+        present = _present_chains(M)
+        if "bch" in present:
+            self.assertEqual(present["bch"]["password"], "d=1")
+            self.assertEqual(M.stratum_password("bch"), "d=1")
+        for name in ("btc", "dgb"):
+            if name in present:          # their CPU doors already start at 1
+                self.assertEqual(present[name]["password"], "x")
+                self.assertEqual(M.stratum_password(name), "x")
         src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 "sololuck_miner.py"), encoding="utf-8").read()
-        self.assertIn('pw = "x"', src)
-        self.assertNotIn('"d=1"', src)
+        # both ways of mining use the per-coin password — never a literal
+        self.assertIn("pw = stratum_password(chain)", src)
+        self.assertIn('"-p", stratum_password(CHAIN)', src)
+        self.assertNotIn('pw = "x"', src)
+        self.assertNotIn('"-p", "x"', src)
+
+    def test_difficulty_copy_matches_the_password_sent(self):
+        """⛔ The screen must describe what the app actually sends: only a coin that
+        asks for a low start may say so, and the coin that asks must say it."""
+        for name, c in _present_chains(M).items():
+            for field in ("start_note", "idle"):     # before Start, and at Start
+                text = str(c[field]).lower()
+                if c["password"] != "x":
+                    self.assertIn("lowest share difficulty", text, "%s.%s" % (name, field))
+                else:
+                    self.assertNotIn("asks the pool", text, "%s.%s" % (name, field))
+                # the false v1.11.1 explanation must not come back
+                self.assertNotIn("whether or not", text, "%s.%s" % (name, field))
 
     def test_defender_wording_is_accurate(self):
         """⚠️ The app adds TWO Defender rules, and used to say it added one.

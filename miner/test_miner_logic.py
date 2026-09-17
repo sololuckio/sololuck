@@ -310,5 +310,87 @@ class TestDownloadUpdate(unittest.TestCase):
         self.assertFalse(_os.path.exists(_os.path.join(self.tmp, "u.exe")))
 
 
+class TestShareCounting(unittest.TestCase):
+    """🔴 v1.11.4 counted every engine line containing "accepted". cpuminer-opt's
+    five-minute Periodic Report prints "Accepted  0  0  0.0%" with no share sent,
+    so the count climbed and the app said "Share accepted" to a miner whose pool
+    had received nothing. Lines below are cpuminer-opt v26.1's own formats."""
+
+    VERDICTS = (
+        ("[2026-09-17 12:04:10] 1 Accepted 1 S0 R0 B0, 34.120 sec (51ms)", (1, 0)),
+        # coloured output, as the engine writes it by default
+        ("[2026-09-17 12:04:44] 2 \x1b[01;32mAccepted 2 \x1b[0mS0 \x1b[0mR0 "
+         "\x1b[0mB0\x1b[0m, 0.345 sec (45ms)\x1b[0m", (2, 0)),
+        # a rejected share rings the bell before its number
+        ("[2026-09-17 12:05:00] \x073 A2 S0 \x1b[01;31mRejected 1 \x1b[0mB0, "
+         "5.000 sec (60ms)", (2, 1)),
+        ("[2026-09-17 12:05:30] 4 A2 Stale 1 R1 B0, 0.500 sec (70ms)", (2, 2)),
+        ("[2026-09-17 12:06:00] 5 A3 S1 R1 BLOCK SOLVED 1, 1.000 sec (80ms)", (3, 2)),
+        # classic cpuminer
+        ("accepted: 3/4 (75.00%), 1234.56 khash/s yes!", (3, 1)),
+    )
+    REPORT = (
+        "[2026-09-17 12:08:57] sha256d: stratum+tcp://bch.sololuck.io:3333",
+        "[2026-09-17 12:08:57] Periodic Report     5m00s        5m00s",
+        "Share rate        0.00/min     0.00/min",
+        "Hash rate          0.00h/s      0.00h/s   (125.30Mh/s)",
+        "Submitted             0            0",
+        "Accepted              0            0        0.0%",
+        "Stale                 0            1        0.0%",
+        "Rejected              0            1        0.0%",
+    )
+
+    def test_verdict_lines_give_running_totals(self):
+        for line, want in self.VERDICTS:
+            self.assertEqual(m.share_counts(line), want, repr(line))
+
+    def test_periodic_report_is_not_a_share(self):
+        for line in self.REPORT:
+            self.assertIsNone(m.share_counts(line), line)
+
+    def test_an_hour_of_reports_counts_nothing(self):
+        """What the miner saw: twelve reports and not one share."""
+        accepted = rejected = 0
+        for _ in range(12):
+            for line in self.REPORT:
+                c = m.share_counts(line)
+                if c is not None:
+                    accepted, rejected = c
+        self.assertEqual((accepted, rejected), (0, 0))
+
+    def test_reports_between_shares_do_not_inflate(self):
+        accepted = 0
+        for line in (self.VERDICTS[0][0],) + self.REPORT + self.REPORT + (self.VERDICTS[1][0],):
+            c = m.share_counts(line)
+            if c is not None:
+                accepted = c[0]
+        self.assertEqual(accepted, 2)
+
+
+class TestHashrateParsing(unittest.TestCase):
+    def test_machine_hashrate_lines(self):
+        for line, want in (
+            ("TTF @ 125.30 Mh/s: Block 34y12d, Share 34s", ("125.30", "M")),
+            ("Miner TTF @ 125.30 Mh/s 34y, Net TTF @ 3.52 Eh/s 10m", ("125.30", "M")),
+            ("Total: 125.30 MH/s", ("125.30", "M")),
+            # the report's share-based estimates are 0.00 before any share lands;
+            # the bracketed figure is the hashes the engine counted
+            ("Hash rate          0.00h/s      0.00h/s   (125.30Mh/s)", ("125.30", "M")),
+            ("[2026-09-17 12:08:57] Hash rate        101.20Mh/s    98.70Mh/s   (124.90Mh/s)",
+             ("124.90", "M")),
+        ):
+            self.assertEqual(m.parse_hashrate(line), want, line)
+
+    def test_other_hashrates_are_ignored(self):
+        for line in (
+            "Net hash rate (est) 900.12 Ph/s",               # the whole network
+            "Lost hash rate     1.20Mh/s   1.10Mh/s",        # lost to rejects
+            "[2026-09-17 12:00:00] Thread 0, CPU 0: 15.66 Mh/s",   # one thread
+            "[2026-09-17 12:00:00] CPU #0: 15.66 MH/s",
+            "hello",
+        ):
+            self.assertIsNone(m.parse_hashrate(line), line)
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

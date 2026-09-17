@@ -46,7 +46,7 @@ ENGINE_DIR_NAME = "SoloLuckMiner-engine"
 # line, so this is 1.11.1 — not 1.11.0, which the betas already sort inside.
 # Every v1.10.1 user auto-downloads and auto-installs this while idle, so
 # nothing unfinished may ride in it.
-APP_VERSION = "1.11.4"
+APP_VERSION = "1.11.5"
 CHANGELOG_URL = "https://sololuck.io/changelog"
 # ── coins ────────────────────────────────────────────────────────────────────
 # ONE Windows app with a coin selector (Bitcoin, Bitcoin Cash, DigiByte).
@@ -81,6 +81,9 @@ _CHAIN_BTC = {
     # datacentre.
     "doors": (("sololuck.io", "Asia"),
               ("us.stratum.sololuck.io", "US")),
+    # The Nano port already starts every connection at difficulty 1, so there is
+    # nothing to ask for.
+    "password": "x",
     "beta": False,
     "start_note": None,
     "idle": "A found block pays its whole reward to this address.",
@@ -104,16 +107,23 @@ _CHAIN_BCH = {
     # moment this build is published. If the app shipped first, every
     # auto-updated user would see a coin the website still has switched off.
     "beta": False,
-    # ⚠️ The difficulty is the POOL's decision, not ours. An earlier build claimed
-    # this app "asks the pool for difficulty 1, so shares register within minutes".
-    # That was false: the port answers with difficulty 1024 whether or not a
-    # "d=" password is sent, because ckpool's mindiff clamps the request up and
-    # "d=" is a one-way ratchet anyway. Say what actually happens instead.
-    "start_note": "Bitcoin Cash: the pool sets your difficulty from your share rate "
-                  "and moves it up or down as that changes, never below the port's floor. "
+    # 🔴 Ask for the pool's floor. Bitcoin Cash has ONE port for every size of
+    # machine and it starts each connection at difficulty 1,024. A 125 MH/s PC
+    # needs about ten hours for one share that hard, and the pool can only lower a
+    # difficulty after it has seen shares — so a PC that never finds one stays at
+    # 1,024 with an empty logbook. "d=1" asks for difficulty 1 instead.
+    # ⚠️ v1.11.1–v1.11.4 sent "x" after a probe recorded 1,024 for both passwords.
+    # The pool sends 1,024 at authorisation and the requested 1 straight after it,
+    # so a probe that stops at the first message sees 1,024 either way. Re-probed
+    # on the live pool 2026-09-17: "d=1" → 1,024 then 1 within 10 ms; "x" → 1,024
+    # only. The request is a one-way ratchet (the pool may raise it but never lower
+    # it again), which costs a CPU nothing: it already starts at the floor.
+    "password": "d=1",
+    "start_note": "Bitcoin Cash: the app asks the pool to start this PC at the lowest "
+                  "share difficulty, so accepted shares show up within minutes. "
                   "A found block pays your CashAddr in BCH.",
-    "idle": "A found block pays this address in BCH. The pool sets the difficulty "
-            "from your share rate, with a floor set by the port.",
+    "idle": "A found block pays this address in BCH. The app asks the pool for the "
+            "lowest share difficulty, so a PC's shares show up in minutes, not hours.",
 }
 _CHAIN_DGB = {
     "name": "DigiByte", "ticker": "DGB", "host": "digibyte.sololuck.io", "port": "3340",
@@ -124,6 +134,8 @@ _CHAIN_DGB = {
     # with no pool, so the link could never render anyway. Set this only when
     # the gate opens AND the route is confirmed live.
     "stats_url": None,
+    # Its CPU door already starts at difficulty 1.
+    "password": "x",
     "beta": True,
     "start_note": "DigiByte beta: SoloLuck mines DigiByte's SHA256d algorithm, one of "
                   "its five. A found block pays your address in DGB.",
@@ -158,6 +170,12 @@ CHAIN_DISABLED_WHY = ("The DigiByte pool is not live yet, so this build cannot m
 def chain_enabled(key):
     """May this coin mine? Only DigiByte is ever gated."""
     return key != "dgb" or DGB_ENABLED
+
+
+def stratum_password(chain):
+    """The stratum password a coin sends: "d=1" for Bitcoin Cash (see the Bitcoin Cash definition),
+    "x" for everything else. The Start button and --minetest both use this."""
+    return CHAIN_DEFS[chain].get("password") or "x"
 
 
 # The coins this build actually offers. A gated coin is dropped entirely — no
@@ -540,7 +558,52 @@ MINER_NAMES = [
     "cpuminer-opt", "cpuminer",   # non-Windows dev fallbacks
 ]
 HASH_RE = re.compile(r"([\d.]+)\s*([kKMGTP]?)[hH]/s")
-ACCEPT_RE = re.compile(r"[Aa]ccepted\s+(\d+)/(\d+)")
+ACCEPT_RE = re.compile(r"[Aa]ccepted:?\s+(\d+)/(\d+)")   # classic cpuminer: "accepted: 3/4"
+# ⭐ cpuminer-opt's verdict on each share: one line per result, carrying the RUNNING
+# totals — "3 Accepted 3 S0 R0 B0, 12.345 sec (145ms)". A rejected share reads
+# "4 A3 S0 Rejected 1 B0, …", a stale one "… Stale 1 …", a solved block
+# "… BLOCK SOLVED 1, …". Nothing else the engine prints means a share was judged.
+# 🔴 Up to v1.11.4 the app counted EVERY line containing the word "accepted", and
+# the engine's five-minute Periodic Report prints "Accepted   0   0   0.0%" whether
+# or not a share was ever sent. The count rose by one every five minutes and the
+# app said "Share accepted — see your worker" while the pool had received nothing.
+SHARE_RESULT_RE = re.compile(
+    r"(?:^|\s)\d+\s+(?:Accepted\s+|A)(\d+)\s+(?:Stale\s+|S)(\d+)\s+"
+    r"(?:Rejected\s+|R)(\d+)\s+(?:BLOCK SOLVED\s+|B)(\d+),\s*[\d.]+\s*sec")
+# The engine colours its output, and rings a bell on a rejected share.
+_ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]|\x07")
+# The Periodic Report's "Hash rate   0.00h/s   0.00h/s   (125.30Mh/s)": the first
+# two figures are ESTIMATES FROM ACCEPTED SHARES (0.00 until shares arrive, noisy
+# after); the bracketed one is the hashes the engine actually counted.
+_REPORT_HASH_RE = re.compile(r"\(\s*([\d.]+)\s*([kKMGTP]?)[hH]/s\s*\)")
+
+
+def share_counts(line):
+    """(accepted, rejected) running totals from a line that reports a share
+    verdict, else None. Stale shares count as rejected: the pool did not take them.
+    ⛔ The Periodic Report's "Accepted"/"Rejected" rows are NOT verdicts."""
+    text = _ANSI_RE.sub("", line)
+    m = SHARE_RESULT_RE.search(text)
+    if m:
+        acc, stale, rej, _blocks = (int(x) for x in m.groups())
+        return acc, rej + stale
+    m = ACCEPT_RE.search(text)
+    if m:
+        acc, total = int(m.group(1)), int(m.group(2))
+        return acc, max(0, total - acc)
+    return None
+
+
+def parse_hashrate(line):
+    """(number, unit prefix) when a line reports THIS machine's hashrate, else None.
+    Skips a single thread, the whole network, hashrate lost to rejects, and the
+    Periodic Report's share-based estimate (its bracketed counted figure is used)."""
+    text = re.sub(r"^\[[^\]]*\]\s*", "", _ANSI_RE.sub("", line)).strip()
+    low = text.lower()
+    if low.startswith(("thread ", "cpu #", "lost hash rate", "net hash rate")):
+        return None
+    m = (_REPORT_HASH_RE if low.startswith("hash rate") else HASH_RE).search(text)
+    return (m.group(1), m.group(2) or "") if m else None
 # connection-state classification of cpuminer output lines (order matters:
 # a failure line often also contains the word "stratum"/"connect")
 _FAIL_RE = re.compile(r"connection (failed|interrupted|timed? ?out|refused|reset|closed|lost)"
@@ -2672,11 +2735,9 @@ class MinerApp:
 
         user = ("%s.%s" % (addr, worker)) if worker else addr
         url = "stratum+tcp://%s:%s" % (host, port)
-        # ⚠️ Always the plain default. A "d=" password does NOT lower the pool's
-        # difficulty — ckpool clamps the request up to the port's mindiff and the
-        # ratchet only ever goes one way — so sending one would buy nothing and
-        # invite a false claim on screen.
-        pw = "x"
+        # Per coin: Bitcoin Cash asks for its floor difficulty so a PC's shares
+        # register at all (see the Bitcoin Cash definition); the other coins send "x".
+        pw = stratum_password(chain)
         cmd = [miner, "-a", ALGO, "-o", url, "-u", user, "-p", pw]
         if threads.isdigit():
             cmd += ["-t", threads]
@@ -3017,10 +3078,14 @@ class MinerApp:
         color = None
         state = classify_line(line)
         name = CHAINS[self._chain()]["name"]     # the readout always names the coin
-        if "accepted" in low or "yes!" in low:
+        # ⭐ Only a verdict line moves the counters (see SHARE_RESULT_RE).
+        counts = share_counts(line)
+        got_accept = counts is not None and counts[0] > self.accepted
+        got_reject = counts is not None and counts[1] > self.rejected
+        if got_accept:
             color = GREEN
             self.status_lbl.config(text="● mining · %s" % name, fg=GREEN)
-        elif "rejected" in low or "booo" in low:
+        elif got_reject:
             color = RED
         elif state == "fail":
             color = RED
@@ -3034,30 +3099,21 @@ class MinerApp:
         # so what the user is told matches what the app is measuring.
         # ⛔ Never let this throw: a miscounted timer must not cost a log line.
         try:
-            if "accepted" in low or "yes!" in low:
+            if got_accept:
                 self._fo_last_accept = time.time()
                 self._fo_fail_since = None
                 self._fo_capped = False      # a fresh outage may be explained again
             elif state == "fail":
                 if self._fo_fail_since is None:
                     self._fo_fail_since = time.time()
-            elif state == "live" or "rejected" in low or "booo" in low:
+            elif state == "live" or got_reject:
                 self._fo_fail_since = None   # a rejected share still proves a live pool
         except Exception:
             pass
 
-        m = ACCEPT_RE.search(line)
-        if m:
-            acc, total = int(m.group(1)), int(m.group(2))
-            self.accepted = acc
-            self.rejected = max(0, total - acc)
+        if counts is not None:
+            self.accepted, self.rejected = counts
             self.acc_lbl.config(text=str(self.accepted))
-            self.rej_lbl.config(text=str(self.rejected))
-        elif "accepted" in low:
-            self.accepted += 1
-            self.acc_lbl.config(text=str(self.accepted))
-        elif "rejected" in low:
-            self.rejected += 1
             self.rej_lbl.config(text=str(self.rejected))
         # ⛔ only offered for a coin that actually HAS a per-worker stats page —
         # never a link that would show one chain's address on another's page.
@@ -3068,12 +3124,11 @@ class MinerApp:
             self.link_lbl.pack(anchor="w", padx=18, pady=(2, 0),
                                before=self.engine_lbl)
 
-        if "h/s" in low and not low.lstrip("[0123456789:.\\- ]").startswith("cpu #"):
-            hm = HASH_RE.search(line)
-            if hm:
-                self._saw_hash = True
-                self.hashrate = "%s %sH/s" % (hm.group(1), hm.group(2) or "")
-                self.hr_lbl.config(text=self.hashrate)
+        hm = parse_hashrate(line) if "h/s" in low else None
+        if hm:
+            self._saw_hash = True
+            self.hashrate = "%s %sH/s" % hm
+            self.hr_lbl.config(text=self.hashrate)
 
         self._logln(line, color)
 
@@ -3146,7 +3201,8 @@ def _minetest(seconds, addr, threads):
     if CHAIN_DEF.get("doors"):
         w("pool: %s" % door_summary(CHAIN))
     url = "stratum+tcp://%s:%s" % (_mt_host, CHAIN_DEF["port"])
-    cmd = [eng, "-a", ALGO, "-o", url, "-u", "%s.%s" % (addr, "bundletest"), "-p", "x", "-t", str(threads)]
+    cmd = [eng, "-a", ALGO, "-o", url, "-u", "%s.%s" % (addr, "bundletest"),
+           "-p", stratum_password(CHAIN), "-t", str(threads)]
     w("cmd: %s" % " ".join(cmd))
     flags = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000) if os.name == "nt" else 0
     captured = []
@@ -3172,7 +3228,10 @@ def _minetest(seconds, addr, threads):
     w("--- last 25 lines ---")
     for ln in captured[-25:]:
         w("  " + ln)
+    verdicts = [c for c in (share_counts(ln) for ln in captured) if c is not None]
+    acc, rej = verdicts[-1] if verdicts else (0, 0)
     w("--- signals: connected=%s gotwork=%s hashing=%s" % (connected, gotwork, hashing))
+    w("--- shares judged by the pool: accepted=%d rejected=%d" % (acc, rej))
     w("RESULT: %s" % ("PASS — mining live to the pool" if (connected and (gotwork or hashing)) else "FAIL"))
     try:
         open(out, "w").write("\n".join(log) + "\n")
