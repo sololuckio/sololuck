@@ -43,6 +43,8 @@ mining engine…".
 ---
 
 ## Antivirus / Windows Defender (important)
+What the app does and changes on your PC, with its live odds, is also on https://sololuck.io/miner.
+
 Antivirus products treat CPU mining engines as potentially unwanted software, so expect the
 cpuminer engine the app downloads to be flagged. The app itself may be flagged too; we can't
 promise otherwise. The app and its build scripts are open source (this folder), and every
