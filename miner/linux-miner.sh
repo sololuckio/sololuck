@@ -56,6 +56,13 @@ echo "is entirely yours — 0% fee — paid on-chain to your address. No account
 echo
 
 [ "$(uname)" = "Linux" ] || { c_r "This installer is for Linux. Windows: https://sololuck.io/setup  ·  macOS: https://sololuck.io/mac-miner.sh"; exit 1; }
+# v5: Android/Termux reports "Linux" too, but it has no sudo/apt build path, so the
+# build below could only fail. Say so plainly instead of dying at the dependency step.
+if [ -n "${TERMUX_VERSION:-}" ] || [ "$(uname -o 2>/dev/null)" = "Android" ]; then
+  c_r "Phones (Android/Termux) aren't supported: this installer needs a Linux PC or server with a C toolchain."
+  c_r "A PC works: Windows app and Linux/macOS steps at https://sololuck.io/setup"
+  exit 1
+fi
 ARCH="$(uname -m)"   # x86_64 | aarch64 | armv7l …
 echo "Detected: Linux on $ARCH"
 
@@ -177,6 +184,14 @@ if [ -z "$ENGINE" ]; then
 fi
 
 [ -n "$ENGINE" ] && [ -x "$ENGINE" ] || { c_r "No runnable engine. See https://sololuck.io/setup"; exit 1; }
+
+# v5: one miner per machine. A second copy would only split the same CPU. The lock
+# (fd 9) is inherited by the engine through exec, so it is held for as long as it mines.
+mkdir -p "$WORKDIR"
+if command -v flock >/dev/null 2>&1; then
+  exec 9>"$WORKDIR/miner.lock"
+  flock -n 9 || { c_r "A SoloLuck miner started by this script is already running on this machine. Stop it (Ctrl-C in its window) before starting another."; exit 1; }
+fi
 
 # 75% of cores + low priority: the machine stays usable while it mines.
 NCPU="$(nproc 2>/dev/null || echo 2)"
