@@ -17,7 +17,7 @@ A June 2026 snapshot of the single-file, dependency-free web front-end behind
 - **Hand-rolled inline-SVG charts.** Pool-hashrate time series (live-updating) on the landing page and
   a per-address 24h sparkline on `/users/<addr>` — both drawn in-page with zero chart libraries, to
   keep the no-third-party-assets promise.
-- **10 languages** via post-render phrase substitution (EN/ID/MS/JA/TH/KO/ZH/VI/FIL/HI).
+- **Languages:** the live site has been English-only since 2026-07-02 (corrected 2026-09-23). This snapshot still contains the older post-render phrase-substitution layer (EN/ID/MS/JA/TH/KO/ZH/VI/FIL/HI), which the live site no longer uses.
 - **Self-referential SEO**: per-language canonical + hreflang + `og:locale`, JSON-LD, sitemap.
 
 ## Endpoints
