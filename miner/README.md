@@ -37,22 +37,40 @@ mining engine…".
 - The pool endpoint is **never typed** — the app sets it per coin. Bitcoin Cash always
   uses `bch.sololuck.io:3333`. Bitcoin has two pools, so at launch the app times both and
   uses the nearer one (see **Choosing a Bitcoin pool** below).
-- Pick a **CPU load** (starts gentle at 25%; 100% is opt-in and will slow your PC).
+- Pick a **CPU load** (starts gentle at 25%; the slider stops at 90%, and above 80% your PC will feel slower).
 - Click **Start Mining**. The selected engine shows under the stats.
 
 ---
 
 ## Antivirus / Windows Defender (important)
-The **app itself** is clean and won't be flagged. But **the downloaded cpuminer engine
-will trip antivirus** — every CPU miner does (it's the engine, not this app; it only hashes).
-If the download is blocked or mining won't start:
+Antivirus products treat CPU mining engines as potentially unwanted software, so expect the
+cpuminer engine the app downloads to be flagged. The app itself may be flagged too; we can't
+promise otherwise. The app and its build scripts are open source (this folder), and every
+release is GPG-signed, with checksums on https://sololuck.io/setup.
+
+The app's **Shield it** button asks for admin rights once (one UAC prompt) and adds two Windows
+Defender exclusions before the engine is written to disk. Real-time protection stays on for
+everything else:
+- a **folder** exclusion for the `SoloLuckMiner-engine` folder next to the app, and
+- a **process** exclusion for `cpuminer-*.exe` inside that folder.
+
+The app shows only the folder exclusion. Both stay until you remove them. In an administrator
+PowerShell:
+
+    Remove-MpPreference -ExclusionPath "<engine folder>"
+    Remove-MpPreference -ExclusionProcess "<engine folder>\cpuminer-*.exe"
+
+Older versions added the process rule without the folder (`cpuminer-*.exe` on its own); remove
+that one with `Remove-MpPreference -ExclusionProcess "cpuminer-*.exe"`.
+
+If you'd rather not use the button, or the download is blocked or mining won't start:
 1. Windows Security → **Virus & threat protection**.
 2. **Protection history** → **Allow / Restore** any "SoloLuck" or "cpuminer" item.
 3. Add an **Exclusion (Folder)** for the `SoloLuckMiner-engine` folder next to the app
    (the app shows the exact path).
 4. Reopen the app (it re-downloads if needed) and click **Start Mining**.
 
-One exclusion sticks because the engine lives in that one stable folder.
+A folder exclusion is enough, because the engine lives in that one stable folder.
 
 ---
 
