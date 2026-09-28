@@ -1,0 +1,784 @@
+{
+ "schema": "sololuck-census-edition/1",
+ "edition": "2026-W39",
+ "revision": 1,
+ "supersedes": null,
+ "title": "Solo Mining Census 2026-W39",
+ "creator": "SoloLuck.io",
+ "license": "CC BY 4.0",
+ "license_url": "https://creativecommons.org/licenses/by/4.0/",
+ "url": "https://sololuck.io/census/2026-w39",
+ "method_url": "https://sololuck.io/census/method",
+ "week": {
+  "iso": "2026-W39",
+  "start": "2026-09-21T00:00:00Z",
+  "end": "2026-09-28T00:00:00Z"
+ },
+ "frozen_at": "2026-09-28T00:07:07Z",
+ "collector_version": "1.0",
+ "coverage": {
+  "hours": 168,
+  "of": 168,
+  "fraction": 1.0,
+  "devices_hours": 149
+ },
+ "pools": [
+  {
+   "id": "ckpool",
+   "name": "CKPool Solo",
+   "url": "https://solo.ckpool.org",
+   "fee": "2% of block reward",
+   "source": "https://raw.stats.ckpool.org/pool/pool.status",
+   "operated_by_sololuck": false,
+   "hours": 168,
+   "miners_field": "Users (addresses)",
+   "workers_field": "Workers",
+   "miners_median": 32480.0,
+   "workers_median": 53403.0,
+   "hashrate_median_hs": 201000000000000000,
+   "hashrate_window": "1 hour"
+  },
+  {
+   "id": "publicpool",
+   "name": "Public Pool",
+   "url": "https://web.public-pool.io",
+   "fee": "0%",
+   "source": "https://public-pool.io:40557/api/pool",
+   "operated_by_sololuck": false,
+   "hours": 149,
+   "miners_field": "totalMiners (connected devices)",
+   "workers_field": null,
+   "miners_median": 25430.0,
+   "workers_median": null,
+   "hashrate_median_hs": 49896793277956832,
+   "hashrate_window": "10-20 minutes per device",
+   "blocks_last_published": 2
+  },
+  {
+   "id": "solopool",
+   "name": "SoloPool.org (Bitcoin)",
+   "url": "https://btc.solopool.org",
+   "fee": "2% of block reward",
+   "source": "https://btc.solopool.org/api/stats",
+   "operated_by_sololuck": false,
+   "hours": 168,
+   "miners_field": "totalMiners",
+   "workers_field": "totalWorkers",
+   "miners_median": 225.0,
+   "workers_median": 269.0,
+   "hashrate_median_hs": 3382488775215562,
+   "hashrate_window": "not stated by the pool",
+   "blocks_last_published": 0
+  },
+  {
+   "id": "atlaspool",
+   "name": "AtlasPool",
+   "url": "https://atlaspool.io",
+   "fee": "1.5% of full reward",
+   "source": "https://atlaspool.io/pool/pool.status",
+   "operated_by_sololuck": false,
+   "hours": 168,
+   "miners_field": "miners",
+   "workers_field": null,
+   "miners_median": 1290.0,
+   "workers_median": null,
+   "hashrate_median_hs": 19705000000000000,
+   "hashrate_window": "1 hour"
+  },
+  {
+   "id": "nerdminers-org",
+   "name": "NerdMiners.org pool",
+   "url": "https://pool.nerdminers.org",
+   "fee": "0%",
+   "source": "https://pool.nerdminers.org/pool/pool.status",
+   "operated_by_sololuck": false,
+   "hours": 168,
+   "miners_field": "Users (addresses)",
+   "workers_field": "Workers",
+   "miners_median": 8910.0,
+   "workers_median": 9452.0,
+   "hashrate_median_hs": 7715185000,
+   "hashrate_window": "1 hour"
+  },
+  {
+   "id": "nerdminer-io",
+   "name": "NerdMiner Pool",
+   "url": "https://pool.nerdminer.io",
+   "fee": "0%",
+   "source": "https://pool.nerdminer.io/api/pool",
+   "operated_by_sololuck": false,
+   "hours": 168,
+   "miners_field": "Users (addresses)",
+   "workers_field": "Workers",
+   "miners_median": 1586.0,
+   "workers_median": 3453.0,
+   "hashrate_median_hs": 410000000000000,
+   "hashrate_window": "1 hour"
+  },
+  {
+   "id": "sololuck",
+   "name": "SoloLuck",
+   "url": "https://sololuck.io",
+   "fee": "0%",
+   "source": "https://sololuck.io/api/public",
+   "operated_by_sololuck": true,
+   "hours": 168,
+   "miners_field": "miners (addresses)",
+   "workers_field": "workers",
+   "miners_median": 34.0,
+   "workers_median": 51.0,
+   "hashrate_median_hs": 182000000000000,
+   "hashrate_window": "1 hour",
+   "blocks_last_published": 0,
+   "operator_miners_median": 1.0,
+   "operator_workers_median": 4.0
+  }
+ ],
+ "not_published": [
+  {
+   "id": "braiins-solo",
+   "name": "Braiins Solo",
+   "url": "https://solo.braiins.com",
+   "fee": "0.5% of block reward",
+   "checked": "2026-09-11",
+   "paths_checked": [
+    "/pool/pool.status",
+    "/api/pool",
+    "/api/stats"
+   ]
+  }
+ ],
+ "ckpool_endpoints": [
+  {
+   "host": "solo.ckpool.org",
+   "hours": 168,
+   "users_median": 23335.0,
+   "workers_median": 38219.5,
+   "hashrate_1h_median_hs": 106000000000000000,
+   "hours_same_as_total": null
+  },
+  {
+   "host": "eusolo.ckpool.org",
+   "hours": 168,
+   "users_median": 6340.0,
+   "workers_median": 10553.0,
+   "hashrate_1h_median_hs": 72550000000000000,
+   "hours_same_as_total": null
+  },
+  {
+   "host": "ausolo.ckpool.org",
+   "hours": 168,
+   "users_median": 986.5,
+   "workers_median": 1589.0,
+   "hashrate_1h_median_hs": 4540000000000000,
+   "hours_same_as_total": null
+  },
+  {
+   "host": "sgsolo.ckpool.org",
+   "hours": 168,
+   "users_median": 583.0,
+   "workers_median": 992.5,
+   "hashrate_1h_median_hs": 3760000000000000,
+   "hours_same_as_total": null
+  },
+  {
+   "host": "uwsolo.ckpool.org",
+   "hours": 168,
+   "users_median": 326.0,
+   "workers_median": 527.5,
+   "hashrate_1h_median_hs": 2570000000000000,
+   "hours_same_as_total": null
+  },
+  {
+   "host": "uesolo.ckpool.org",
+   "hours": 168,
+   "users_median": 32480.0,
+   "workers_median": 53403.0,
+   "hashrate_1h_median_hs": 201000000000000000,
+   "hours_same_as_total": 167
+  }
+ ],
+ "ckpool_check": {
+  "hours_checked": 168,
+  "hours_total_covered_endpoints": 167,
+  "users_ratio_median": 1.0287,
+  "hashrate_ratio_median": 1.05465
+ },
+ "devices": {
+  "source": "Public Pool /api/info",
+  "source_url": "https://public-pool.io:40557/api/info",
+  "hours": 149,
+  "families": [
+   {
+    "device": "bitaxe",
+    "hours_present": 149,
+    "count_median": 16675.0,
+    "hashrate_median_hs": 17425283979436950,
+    "average_median_hs": 1043517036684,
+    "hardest_share": 1017524561688.0608
+   },
+   {
+    "device": "NerdQAxe++",
+    "hours_present": 149,
+    "count_median": 1991.0,
+    "hashrate_median_hs": 9518801706263600,
+    "average_median_hs": 4791931708706,
+    "hardest_share": 2645074356911.546
+   },
+   {
+    "device": "NerdMiner",
+    "hours_present": 146,
+    "count_median": 1812.0,
+    "hashrate_median_hs": 560411052,
+    "average_median_hs": 367172,
+    "hardest_share": 314043508.53846115
+   },
+   {
+    "device": "cgminer",
+    "hours_present": 149,
+    "count_median": 743.0,
+    "hashrate_median_hs": 6703538733552415,
+    "average_median_hs": 9022259399128,
+    "hardest_share": 4388452025807.2163
+   },
+   {
+    "device": "LuckyMiner",
+    "hours_present": 149,
+    "count_median": 670.0,
+    "hashrate_median_hs": 805007947851435,
+    "average_median_hs": 1185578715540,
+    "hardest_share": 1089451807595.6033
+   },
+   {
+    "device": "NerdAxe",
+    "hours_present": 149,
+    "count_median": 514.0,
+    "hashrate_median_hs": 399320220390021,
+    "average_median_hs": 779342423265,
+    "hardest_share": 374218058064.0006
+   },
+   {
+    "device": "Other",
+    "hours_present": 149,
+    "count_median": 478.0,
+    "hashrate_median_hs": 88237251545747,
+    "average_median_hs": 192503040099,
+    "hardest_share": 998629495.0874895
+   },
+   {
+    "device": "cpuminer",
+    "hours_present": 147,
+    "count_median": 381.0,
+    "hashrate_median_hs": 9657345437,
+    "average_median_hs": 25643769,
+    "hardest_share": 40100684.827100754
+   },
+   {
+    "device": "NerdOCTAXE",
+    "hours_present": 149,
+    "count_median": 313.0,
+    "hashrate_median_hs": 3287152904817464,
+    "average_median_hs": 10470820442176,
+    "hardest_share": 292542049871.8824
+   },
+   {
+    "device": "bitaxe/sv2",
+    "hours_present": 149,
+    "count_median": 286.0,
+    "hashrate_median_hs": 366875590223752,
+    "average_median_hs": 1278079914951,
+    "hardest_share": 126078991256.25174
+   },
+   {
+    "device": "Starminer",
+    "hours_present": 149,
+    "count_median": 271.0,
+    "hashrate_median_hs": 331226781685650,
+    "average_median_hs": 1208037296459,
+    "hardest_share": 92875424401.39624
+   },
+   {
+    "device": "NerdNOS",
+    "hours_present": 149,
+    "count_median": 243.0,
+    "hashrate_median_hs": 36138819721612,
+    "average_median_hs": 148324657642,
+    "hardest_share": 1319679234.9458222
+   },
+   {
+    "device": "NerdQAxe+",
+    "hours_present": 149,
+    "count_median": 218.0,
+    "hashrate_median_hs": 508895166929381,
+    "average_median_hs": 2329572718783,
+    "hardest_share": 62055705263.9154
+   },
+   {
+    "device": "Miner",
+    "hours_present": 149,
+    "count_median": 124.0,
+    "hashrate_median_hs": 101524400529365,
+    "average_median_hs": 818019222537,
+    "hardest_share": 77356601663.37706
+   },
+   {
+    "device": "NerdQAxe++/sv2",
+    "hours_present": 149,
+    "count_median": 72.0,
+    "hashrate_median_hs": 344699186421097,
+    "average_median_hs": 4793048984032,
+    "hardest_share": 58407925680.718124
+   },
+   {
+    "device": "JingleMiner",
+    "hours_present": 148,
+    "count_median": 65.0,
+    "hashrate_median_hs": 34003012326646,
+    "average_median_hs": 514685266482,
+    "hardest_share": 44889721644.966675
+   },
+   {
+    "device": "2026",
+    "hours_present": 149,
+    "count_median": 60.0,
+    "hashrate_median_hs": 3050539385957932,
+    "average_median_hs": 51119051892416,
+    "hardest_share": 847690554981.5175
+   },
+   {
+    "device": "bitdsk",
+    "hours_present": 101,
+    "count_median": 59.0,
+    "hashrate_median_hs": 10521233459433,
+    "average_median_hs": 178332756564,
+    "hardest_share": 1290789531.1730487
+   },
+   {
+    "device": "2025",
+    "hours_present": 149,
+    "count_median": 51.0,
+    "hashrate_median_hs": 94696686186800,
+    "average_median_hs": 1857422919887,
+    "hardest_share": 52525794813.31976
+   },
+   {
+    "device": "BN55",
+    "hours_present": 139,
+    "count_median": 43.0,
+    "hashrate_median_hs": 44423067698324,
+    "average_median_hs": 1051945398086,
+    "hardest_share": 7923838430.5484085
+   },
+   {
+    "device": "Antminer",
+    "hours_present": 149,
+    "count_median": 41.0,
+    "hashrate_median_hs": 2460368918596856,
+    "average_median_hs": 62420228923920,
+    "hardest_share": 1690105689475.3337
+   },
+   {
+    "device": "bitforge",
+    "hours_present": 149,
+    "count_median": 37.0,
+    "hashrate_median_hs": 81844772852612,
+    "average_median_hs": 2237816370712,
+    "hardest_share": 58198346351.911964
+   },
+   {
+    "device": "NerdQX",
+    "hours_present": 149,
+    "count_median": 34.0,
+    "hashrate_median_hs": 241379537722507,
+    "average_median_hs": 7026328455860,
+    "hardest_share": 16963927368.789156
+   },
+   {
+    "device": "GreenBit",
+    "hours_present": 149,
+    "count_median": 31.0,
+    "hashrate_median_hs": 19175929098441,
+    "average_median_hs": 640832892903,
+    "hardest_share": 3663202169.682384
+   },
+   {
+    "device": "NMAxe",
+    "hours_present": 148,
+    "count_median": 29.0,
+    "hashrate_median_hs": 13915567261919,
+    "average_median_hs": 470572349180,
+    "hardest_share": 4072179587.6136107
+   },
+   {
+    "device": "NerdOCTAXE-γ/sv2",
+    "hours_present": 149,
+    "count_median": 19.0,
+    "hashrate_median_hs": 182794227283352,
+    "average_median_hs": 9372838494931,
+    "hardest_share": 62790423909.32811
+   },
+   {
+    "device": "NMAxeGamma",
+    "hours_present": 149,
+    "count_median": 17.0,
+    "hashrate_median_hs": 19708557240772,
+    "average_median_hs": 1160996654134,
+    "hardest_share": 35981579491.84801
+   },
+   {
+    "device": "YYSLUPING",
+    "hours_present": 149,
+    "count_median": 16.0,
+    "hashrate_median_hs": 85952835361306,
+    "average_median_hs": 5550029699965,
+    "hardest_share": 4668659079.068375
+   },
+   {
+    "device": "2024",
+    "hours_present": 149,
+    "count_median": 15.0,
+    "hashrate_median_hs": 19078708837141,
+    "average_median_hs": 1294976916088,
+    "hardest_share": 3608273532.8184786
+   },
+   {
+    "device": "whatsminer",
+    "hours_present": 149,
+    "count_median": 13.0,
+    "hashrate_median_hs": 932245743170140,
+    "average_median_hs": 74055595329510,
+    "hardest_share": 120861611818.66869
+   },
+   {
+    "device": "Bitfortun",
+    "hours_present": 149,
+    "count_median": 11.0,
+    "hashrate_median_hs": 58234299245273,
+    "average_median_hs": 5125543242782,
+    "hardest_share": 7328124110.376795
+   },
+   {
+    "device": "2022",
+    "hours_present": 149,
+    "count_median": 10.0,
+    "hashrate_median_hs": 76288760300933,
+    "average_median_hs": 7703233315373,
+    "hardest_share": 42228139693.82633
+   },
+   {
+    "device": "NerdAxeGamma/sv2",
+    "hours_present": 129,
+    "count_median": 10.0,
+    "hashrate_median_hs": 11064670521161,
+    "average_median_hs": 1075860343879,
+    "hardest_share": 2904349539.6200604
+   },
+   {
+    "device": "apollo",
+    "hours_present": 149,
+    "count_median": 10.0,
+    "hashrate_median_hs": 58924929966823,
+    "average_median_hs": 5769980342708,
+    "hardest_share": 81446361865.98026
+   },
+   {
+    "device": "Zyber8S",
+    "hours_present": 149,
+    "count_median": 9.0,
+    "hashrate_median_hs": 45985635570307,
+    "average_median_hs": 5027770458344,
+    "hardest_share": 11793931642.841782
+   },
+   {
+    "device": "THOR",
+    "hours_present": 149,
+    "count_median": 8.0,
+    "hashrate_median_hs": 34722375284406,
+    "average_median_hs": 4187875516978,
+    "hardest_share": 5675116388.887321
+   },
+   {
+    "device": "Zyber8G",
+    "hours_present": 149,
+    "count_median": 7.0,
+    "hashrate_median_hs": 53649253634859,
+    "average_median_hs": 7581961676244,
+    "hardest_share": 12311491956.391249
+   },
+   {
+    "device": "HarloLabs",
+    "hours_present": 149,
+    "count_median": 6.0,
+    "hashrate_median_hs": 33118345672277,
+    "average_median_hs": 5487048740543,
+    "hardest_share": 16153218686.707111
+   },
+   {
+    "device": "NexusS1",
+    "hours_present": 149,
+    "count_median": 6.0,
+    "hashrate_median_hs": 63259395765530,
+    "average_median_hs": 11044863868893,
+    "hardest_share": 9310273456.45808
+   },
+   {
+    "device": "Luckyaxe",
+    "hours_present": 149,
+    "count_median": 5.0,
+    "hashrate_median_hs": 21975627259247,
+    "average_median_hs": 5083992034675,
+    "hardest_share": 1096719641210.3773
+   },
+   {
+    "device": "NerdQAxe++ TPS546/sv2",
+    "hours_present": 149,
+    "count_median": 5.0,
+    "hashrate_median_hs": 28383778924874,
+    "average_median_hs": 5619338027518,
+    "hardest_share": 406340761106.6709
+   },
+   {
+    "device": "bmminer",
+    "hours_present": 142,
+    "count_median": 5.0,
+    "hashrate_median_hs": 125310699257784,
+    "average_median_hs": 21321399889045,
+    "hardest_share": 21572356790.439125
+   },
+   {
+    "device": "NerdQX/sv2",
+    "hours_present": 149,
+    "count_median": 4.0,
+    "hashrate_median_hs": 29127131455602,
+    "average_median_hs": 6168598195530,
+    "hardest_share": 3589145118.4063883
+   },
+   {
+    "device": "volc",
+    "hours_present": 92,
+    "count_median": 4.0,
+    "hashrate_median_hs": 12439278303357,
+    "average_median_hs": 3728905895438,
+    "hardest_share": 862420637.0838951
+   },
+   {
+    "device": "Magicminer",
+    "hours_present": 137,
+    "count_median": 3.0,
+    "hashrate_median_hs": 30078758219428,
+    "average_median_hs": 9817037017157,
+    "hardest_share": 2230260934.4329906
+   },
+   {
+    "device": "NMQAxe++",
+    "hours_present": 100,
+    "count_median": 3.0,
+    "hashrate_median_hs": 12416020807796,
+    "average_median_hs": 4607556479727,
+    "hardest_share": 2108657329.1897118
+   },
+   {
+    "device": "xminer",
+    "hours_present": 149,
+    "count_median": 3.0,
+    "hashrate_median_hs": 304358363190254,
+    "average_median_hs": 106913280524156,
+    "hardest_share": 366626734403.71185
+   },
+   {
+    "device": "2021",
+    "hours_present": 130,
+    "count_median": 2.0,
+    "hashrate_median_hs": 11742092105333,
+    "average_median_hs": 6615482812744,
+    "hardest_share": 1567622827.6919425
+   },
+   {
+    "device": "Braiins/sv2",
+    "hours_present": 149,
+    "count_median": 2.0,
+    "hashrate_median_hs": 229536876683336,
+    "average_median_hs": 120023671432798,
+    "hardest_share": 75647707194.91576
+   },
+   {
+    "device": "NexusS1_2/sv2",
+    "hours_present": 148,
+    "count_median": 2.0,
+    "hashrate_median_hs": 20102479100164,
+    "average_median_hs": 10048421044372,
+    "hardest_share": 23236144562.4989
+   },
+   {
+    "device": "2023",
+    "hours_present": 149,
+    "count_median": 1.0,
+    "hashrate_median_hs": 19855615398409,
+    "average_median_hs": 19855615398409,
+    "hardest_share": 8058694940.536237
+   },
+   {
+    "device": "NexusS1/sv2",
+    "hours_present": 109,
+    "count_median": 1.0,
+    "hashrate_median_hs": 11668082024194,
+    "average_median_hs": 11405022645883,
+    "hardest_share": 2060881313.194727
+   },
+   {
+    "device": "B",
+    "hours_present": 64,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 11155073438278,
+    "hardest_share": 27069661721.41566
+   },
+   {
+    "device": "Braiins",
+    "hours_present": 4,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 447981260161766,
+    "hardest_share": 1807338693.234003
+   },
+   {
+    "device": "FLUMINER",
+    "hours_present": 23,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 72982089442940,
+    "hardest_share": 4740398610.123456
+   },
+   {
+    "device": "GMiner",
+    "hours_present": 1,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 1951039217554,
+    "hardest_share": 4010592.492369129
+   },
+   {
+    "device": "LiveHashRate.com",
+    "hours_present": 2,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 97535210870836,
+    "hardest_share": 33066879.37732677
+   },
+   {
+    "device": "MRR",
+    "hours_present": 45,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 370046396727475,
+    "hardest_share": 81696728582.87093
+   },
+   {
+    "device": "NerdEKO",
+    "hours_present": 28,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 16666261508868,
+    "hardest_share": 2115717727.1541002
+   },
+   {
+    "device": "NexusQX1",
+    "hours_present": 72,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 6073750036285,
+    "hardest_share": 833828838.8402724
+   },
+   {
+    "device": "NexusS1_1",
+    "hours_present": 32,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 5587750503397,
+    "hardest_share": 557266372.1258402
+   },
+   {
+    "device": "NexusS1_2",
+    "hours_present": 61,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 11035885004731,
+    "hardest_share": 5169106235.174575
+   },
+   {
+    "device": "bdminer",
+    "hours_present": 43,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 610180365314168,
+    "hardest_share": 16669007761.40815
+   },
+   {
+    "device": "bitaxeHex",
+    "hours_present": 8,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 2531725715111,
+    "hardest_share": 1065016378.0546341
+   },
+   {
+    "device": "hashrate",
+    "hours_present": 15,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 12094040750656,
+    "hardest_share": 182869267.33849397
+   },
+   {
+    "device": "hbminer",
+    "hours_present": 40,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 8555587236188,
+    "hardest_share": 1606581786.6240592
+   },
+   {
+    "device": "sm",
+    "hours_present": 7,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 49356522262732,
+    "hardest_share": 1390187487.192036
+   },
+   {
+    "device": "zyber",
+    "hours_present": 3,
+    "count_median": 0.0,
+    "hashrate_median_hs": 0,
+    "average_median_hs": 2562462004652,
+    "hardest_share": 665880861.4414806
+   }
+  ]
+ },
+ "headline": {
+  "solo_hashrate_hs": 274576289768357394,
+  "pools_in_sum": [
+   "ckpool",
+   "publicpool",
+   "solopool",
+   "atlaspool",
+   "nerdminers-org",
+   "nerdminer-io",
+   "sololuck"
+  ],
+  "bitaxe_count_median": 16675.0,
+  "average_bitaxe_hs": 1043517036684,
+  "home_families": [
+   "bitaxe",
+   "NerdQAxe++"
+  ],
+  "home_hashrate_hs": 26934100815053352,
+  "difficulty_median": 132757073449487.5,
+  "network_hashrate_hs": 950312147963697823744,
+  "chance_home_block_month": 0.116816,
+  "chance_is": "lower bound",
+  "sololuck_bitcoin_blocks_published": 0
+ },
+ "csv_sha256": "1962b9f767a7922e662621c33ec51f39b630c2bbd97ecf2902600e9a01cb57fc",
+ "data_sha256": "75cb597e80edd2c8ed9c0622b22c2b8cc3705219fcb8b37d046f3cb163c1507f"
+}
