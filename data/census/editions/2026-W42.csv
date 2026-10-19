@@ -1,0 +1,367 @@
+edition,section,key,name,metric,value,unit,window,hours
+2026-W42,coverage,collector,hourly readings,hours,168,hours,week,168
+2026-W42,pool,ckpool,CKPool Solo,fee,2% of block reward,,,
+2026-W42,pool,ckpool,CKPool Solo,miners_median,32770.0,count Users (addresses),,168
+2026-W42,pool,ckpool,CKPool Solo,workers_median,53290.0,count Workers,,168
+2026-W42,pool,ckpool,CKPool Solo,hashrate_median,200000000000000000,H/s,1 hour,168
+2026-W42,pool,publicpool,Public Pool,fee,0%,,,
+2026-W42,pool,publicpool,Public Pool,miners_median,25757.0,count totalMiners (connected devices),,159
+2026-W42,pool,publicpool,Public Pool,hashrate_median,52186988479108024,H/s,10-20 minutes per device,159
+2026-W42,pool,publicpool,Public Pool,blocks_last_published,2,count,,159
+2026-W42,pool,solopool,SoloPool.org (Bitcoin),fee,2% of block reward,,,
+2026-W42,pool,solopool,SoloPool.org (Bitcoin),miners_median,226.0,count totalMiners,,168
+2026-W42,pool,solopool,SoloPool.org (Bitcoin),workers_median,288.0,count totalWorkers,,168
+2026-W42,pool,solopool,SoloPool.org (Bitcoin),hashrate_median,4000170731518477,H/s,not stated by the pool,168
+2026-W42,pool,solopool,SoloPool.org (Bitcoin),blocks_last_published,0,count,,168
+2026-W42,pool,atlaspool,AtlasPool,fee,1.5% of full reward,,,
+2026-W42,pool,atlaspool,AtlasPool,miners_median,1336.0,count miners,,168
+2026-W42,pool,atlaspool,AtlasPool,hashrate_median,21610000000000000,H/s,1 hour,168
+2026-W42,pool,nerdminers-org,NerdMiners.org pool,fee,0%,,,
+2026-W42,pool,nerdminers-org,NerdMiners.org pool,miners_median,8782.5,count Users (addresses),,168
+2026-W42,pool,nerdminers-org,NerdMiners.org pool,workers_median,12795.0,count Workers,,168
+2026-W42,pool,nerdminers-org,NerdMiners.org pool,hashrate_median,10059950000,H/s,1 hour,168
+2026-W42,pool,nerdminer-io,NerdMiner Pool,fee,0%,,,
+2026-W42,pool,nerdminer-io,NerdMiner Pool,miners_median,1651.5,count Users (addresses),,168
+2026-W42,pool,nerdminer-io,NerdMiner Pool,workers_median,3674.0,count Workers,,168
+2026-W42,pool,nerdminer-io,NerdMiner Pool,hashrate_median,445000000000000,H/s,1 hour,168
+2026-W42,pool,sololuck,SoloLuck,fee,0%,,,
+2026-W42,pool,sololuck,SoloLuck,miners_median,33.0,count miners (addresses),,166
+2026-W42,pool,sololuck,SoloLuck,workers_median,47.0,count workers,,166
+2026-W42,pool,sololuck,SoloLuck,hashrate_median,197500000000000,H/s,1 hour,166
+2026-W42,pool,sololuck,SoloLuck,blocks_last_published,0,count,,166
+2026-W42,pool,sololuck,SoloLuck,operator_miners_median,1.0,count,,166
+2026-W42,pool,sololuck,SoloLuck,operator_workers_median,5.0,count,,166
+2026-W42,not_published,braiins-solo,Braiins Solo,checked,2026-09-11,,,
+2026-W42,ckpool_endpoint,solo.ckpool.org,solo.ckpool.org,users_median,23127.0,count Users,,168
+2026-W42,ckpool_endpoint,solo.ckpool.org,solo.ckpool.org,workers_median,37454.5,count Workers,,168
+2026-W42,ckpool_endpoint,solo.ckpool.org,solo.ckpool.org,hashrate_median,97650000000000000,H/s,1 hour,168
+2026-W42,ckpool_endpoint,eusolo.ckpool.org,eusolo.ckpool.org,users_median,6546.5,count Users,,168
+2026-W42,ckpool_endpoint,eusolo.ckpool.org,eusolo.ckpool.org,workers_median,10578.5,count Workers,,168
+2026-W42,ckpool_endpoint,eusolo.ckpool.org,eusolo.ckpool.org,hashrate_median,70150000000000000,H/s,1 hour,168
+2026-W42,ckpool_endpoint,ausolo.ckpool.org,ausolo.ckpool.org,users_median,984.5,count Users,,168
+2026-W42,ckpool_endpoint,ausolo.ckpool.org,ausolo.ckpool.org,workers_median,1598.0,count Workers,,168
+2026-W42,ckpool_endpoint,ausolo.ckpool.org,ausolo.ckpool.org,hashrate_median,4240000000000000,H/s,1 hour,168
+2026-W42,ckpool_endpoint,sgsolo.ckpool.org,sgsolo.ckpool.org,users_median,655.0,count Users,,168
+2026-W42,ckpool_endpoint,sgsolo.ckpool.org,sgsolo.ckpool.org,workers_median,1100.0,count Workers,,168
+2026-W42,ckpool_endpoint,sgsolo.ckpool.org,sgsolo.ckpool.org,hashrate_median,4100000000000000,H/s,1 hour,168
+2026-W42,ckpool_endpoint,uwsolo.ckpool.org,uwsolo.ckpool.org,users_median,372.0,count Users,,168
+2026-W42,ckpool_endpoint,uwsolo.ckpool.org,uwsolo.ckpool.org,workers_median,585.0,count Workers,,168
+2026-W42,ckpool_endpoint,uwsolo.ckpool.org,uwsolo.ckpool.org,hashrate_median,4690000000000000,H/s,1 hour,168
+2026-W42,ckpool_endpoint,uesolo.ckpool.org,uesolo.ckpool.org,users_median,32770.0,count Users,,168
+2026-W42,ckpool_endpoint,uesolo.ckpool.org,uesolo.ckpool.org,workers_median,53290.0,count Workers,,168
+2026-W42,ckpool_endpoint,uesolo.ckpool.org,uesolo.ckpool.org,hashrate_median,200000000000000000,H/s,1 hour,168
+2026-W42,device,bitaxe,bitaxe,count_median,16765.5,devices,,160
+2026-W42,device,bitaxe,bitaxe,hashrate_median,17603588445249310,H/s,,160
+2026-W42,device,bitaxe,bitaxe,average_median,1050148752147,H/s,,160
+2026-W42,device,bitaxe,bitaxe,hardest_share,4116372746705.0674,difficulty,,160
+2026-W42,device,NerdQAxe++,NerdQAxe++,count_median,1939.5,devices,,160
+2026-W42,device,NerdQAxe++,NerdQAxe++,hashrate_median,9334079370647026,H/s,,160
+2026-W42,device,NerdQAxe++,NerdQAxe++,average_median,4805410643409,H/s,,160
+2026-W42,device,NerdQAxe++,NerdQAxe++,hardest_share,2112218795494.352,difficulty,,160
+2026-W42,device,NerdMiner,NerdMiner,count_median,1819.0,devices,,156
+2026-W42,device,NerdMiner,NerdMiner,hashrate_median,600181170896,H/s,,156
+2026-W42,device,NerdMiner,NerdMiner,average_median,335802713,H/s,,156
+2026-W42,device,NerdMiner,NerdMiner,hardest_share,77089964.54451717,difficulty,,156
+2026-W42,device,cgminer,cgminer,count_median,756.0,devices,,160
+2026-W42,device,cgminer,cgminer,hashrate_median,6832973266591500,H/s,,160
+2026-W42,device,cgminer,cgminer,average_median,9022733255405,H/s,,160
+2026-W42,device,cgminer,cgminer,hardest_share,9229412882163.143,difficulty,,160
+2026-W42,device,LuckyMiner,LuckyMiner,count_median,698.5,devices,,160
+2026-W42,device,LuckyMiner,LuckyMiner,hashrate_median,859892427354499,H/s,,160
+2026-W42,device,LuckyMiner,LuckyMiner,average_median,1237752380566,H/s,,160
+2026-W42,device,LuckyMiner,LuckyMiner,hardest_share,123741586876.27008,difficulty,,160
+2026-W42,device,NerdAxe,NerdAxe,count_median,522.0,devices,,160
+2026-W42,device,NerdAxe,NerdAxe,hashrate_median,413920177510209,H/s,,160
+2026-W42,device,NerdAxe,NerdAxe,average_median,791900790702,H/s,,160
+2026-W42,device,NerdAxe,NerdAxe,hardest_share,35278006325.19669,difficulty,,160
+2026-W42,device,Other,Other,count_median,520.0,devices,,160
+2026-W42,device,Other,Other,hashrate_median,102411044499286,H/s,,160
+2026-W42,device,Other,Other,average_median,201058910799,H/s,,160
+2026-W42,device,Other,Other,hardest_share,979668173.9680007,difficulty,,160
+2026-W42,device,cpuminer,cpuminer,count_median,382.0,devices,,160
+2026-W42,device,cpuminer,cpuminer,hashrate_median,10349937616,H/s,,160
+2026-W42,device,cpuminer,cpuminer,average_median,27429010,H/s,,160
+2026-W42,device,cpuminer,cpuminer,hardest_share,2480395.309093845,difficulty,,160
+2026-W42,device,Starminer,Starminer,count_median,373.0,devices,,160
+2026-W42,device,Starminer,Starminer,hashrate_median,424155450398510,H/s,,160
+2026-W42,device,Starminer,Starminer,average_median,1115546004310,H/s,,160
+2026-W42,device,Starminer,Starminer,hardest_share,821570439270.2089,difficulty,,160
+2026-W42,device,bitaxe/sv2,bitaxe/sv2,count_median,367.0,devices,,160
+2026-W42,device,bitaxe/sv2,bitaxe/sv2,hashrate_median,474709136431462,H/s,,160
+2026-W42,device,bitaxe/sv2,bitaxe/sv2,average_median,1296271715722,H/s,,160
+2026-W42,device,bitaxe/sv2,bitaxe/sv2,hardest_share,191394209130.24738,difficulty,,160
+2026-W42,device,NerdOCTAXE,NerdOCTAXE,count_median,296.5,devices,,160
+2026-W42,device,NerdOCTAXE,NerdOCTAXE,hashrate_median,3147172710421579,H/s,,160
+2026-W42,device,NerdOCTAXE,NerdOCTAXE,average_median,10622021650767,H/s,,160
+2026-W42,device,NerdOCTAXE,NerdOCTAXE,hardest_share,23149763292325.0,difficulty,,160
+2026-W42,device,NerdNOS,NerdNOS,count_median,284.0,devices,,160
+2026-W42,device,NerdNOS,NerdNOS,hashrate_median,42122041910661,H/s,,160
+2026-W42,device,NerdNOS,NerdNOS,average_median,148739340580,H/s,,160
+2026-W42,device,NerdNOS,NerdNOS,hardest_share,137855336166.32175,difficulty,,160
+2026-W42,device,NerdQAxe+,NerdQAxe+,count_median,220.0,devices,,160
+2026-W42,device,NerdQAxe+,NerdQAxe+,hashrate_median,514948832275496,H/s,,160
+2026-W42,device,NerdQAxe+,NerdQAxe+,average_median,2340534068253,H/s,,160
+2026-W42,device,NerdQAxe+,NerdQAxe+,hardest_share,51589976134.22018,difficulty,,160
+2026-W42,device,Miner,Miner,count_median,131.5,devices,,160
+2026-W42,device,Miner,Miner,hashrate_median,106125998917828,H/s,,160
+2026-W42,device,Miner,Miner,average_median,802953619532,H/s,,160
+2026-W42,device,Miner,Miner,hardest_share,8954617300.171566,difficulty,,160
+2026-W42,device,NerdQAxe++/sv2,NerdQAxe++/sv2,count_median,81.0,devices,,160
+2026-W42,device,NerdQAxe++/sv2,NerdQAxe++/sv2,hashrate_median,389275784129048,H/s,,160
+2026-W42,device,NerdQAxe++/sv2,NerdQAxe++/sv2,average_median,4810635499293,H/s,,160
+2026-W42,device,NerdQAxe++/sv2,NerdQAxe++/sv2,hardest_share,423672402986.42065,difficulty,,160
+2026-W42,device,JingleMiner,JingleMiner,count_median,62.5,devices,,160
+2026-W42,device,JingleMiner,JingleMiner,hashrate_median,36221279478797,H/s,,160
+2026-W42,device,JingleMiner,JingleMiner,average_median,586461715683,H/s,,160
+2026-W42,device,JingleMiner,JingleMiner,hardest_share,14480105854.676237,difficulty,,160
+2026-W42,device,BN55,BN55,count_median,62.0,devices,,160
+2026-W42,device,BN55,BN55,hashrate_median,66527145631969,H/s,,160
+2026-W42,device,BN55,BN55,average_median,1071087130942,H/s,,160
+2026-W42,device,BN55,BN55,hardest_share,19337982602.153248,difficulty,,160
+2026-W42,device,2026,2026,count_median,57.0,devices,,160
+2026-W42,device,2026,2026,hashrate_median,2614347186456872,H/s,,160
+2026-W42,device,2026,2026,average_median,45660142305938,H/s,,160
+2026-W42,device,2026,2026,hardest_share,3256314202919.763,difficulty,,160
+2026-W42,device,2025,2025,count_median,49.0,devices,,160
+2026-W42,device,2025,2025,hashrate_median,86676345298716,H/s,,160
+2026-W42,device,2025,2025,average_median,1760307402418,H/s,,160
+2026-W42,device,2025,2025,hardest_share,87434639117.663,difficulty,,160
+2026-W42,device,NerdQX,NerdQX,count_median,44.0,devices,,160
+2026-W42,device,NerdQX,NerdQX,hashrate_median,327383208831011,H/s,,160
+2026-W42,device,NerdQX,NerdQX,average_median,7428394945419,H/s,,160
+2026-W42,device,NerdQX,NerdQX,hardest_share,68298443781.26,difficulty,,160
+2026-W42,device,Antminer,Antminer,count_median,42.0,devices,,160
+2026-W42,device,Antminer,Antminer,hashrate_median,2787935704205404,H/s,,160
+2026-W42,device,Antminer,Antminer,average_median,67169515358855,H/s,,160
+2026-W42,device,Antminer,Antminer,hardest_share,1368449403242.8752,difficulty,,160
+2026-W42,device,GreenBit,GreenBit,count_median,35.0,devices,,160
+2026-W42,device,GreenBit,GreenBit,hashrate_median,23475874543122,H/s,,160
+2026-W42,device,GreenBit,GreenBit,average_median,666877369667,H/s,,160
+2026-W42,device,GreenBit,GreenBit,hardest_share,14020734180.262533,difficulty,,160
+2026-W42,device,bitforge,bitforge,count_median,35.0,devices,,160
+2026-W42,device,bitforge,bitforge,hashrate_median,77637258108680,H/s,,160
+2026-W42,device,bitforge,bitforge,average_median,2204093479034,H/s,,160
+2026-W42,device,bitforge,bitforge,hardest_share,14133335366.212532,difficulty,,160
+2026-W42,device,NMAxe,NMAxe,count_median,34.0,devices,,160
+2026-W42,device,NMAxe,NMAxe,hashrate_median,15617657145106,H/s,,160
+2026-W42,device,NMAxe,NMAxe,average_median,459678951799,H/s,,160
+2026-W42,device,NMAxe,NMAxe,hardest_share,4254211852.220051,difficulty,,160
+2026-W42,device,NerdOCTAXE-γ/sv2,NerdOCTAXE-γ/sv2,count_median,23.0,devices,,160
+2026-W42,device,NerdOCTAXE-γ/sv2,NerdOCTAXE-γ/sv2,hashrate_median,225922979865686,H/s,,160
+2026-W42,device,NerdOCTAXE-γ/sv2,NerdOCTAXE-γ/sv2,average_median,9824429918176,H/s,,160
+2026-W42,device,NerdOCTAXE-γ/sv2,NerdOCTAXE-γ/sv2,hardest_share,21311364295.834442,difficulty,,160
+2026-W42,device,YYSLUPING,YYSLUPING,count_median,21.0,devices,,160
+2026-W42,device,YYSLUPING,YYSLUPING,hashrate_median,113239877928900,H/s,,160
+2026-W42,device,YYSLUPING,YYSLUPING,average_median,5446005310815,H/s,,160
+2026-W42,device,YYSLUPING,YYSLUPING,hardest_share,56897133026.81786,difficulty,,160
+2026-W42,device,NMAxeGamma,NMAxeGamma,count_median,19.0,devices,,160
+2026-W42,device,NMAxeGamma,NMAxeGamma,hashrate_median,21711781830401,H/s,,160
+2026-W42,device,NMAxeGamma,NMAxeGamma,average_median,1168006352673,H/s,,160
+2026-W42,device,NMAxeGamma,NMAxeGamma,hardest_share,2037766832.5960045,difficulty,,160
+2026-W42,device,2024,2024,count_median,16.0,devices,,160
+2026-W42,device,2024,2024,hashrate_median,35896550354410,H/s,,160
+2026-W42,device,2024,2024,average_median,2197012900983,H/s,,160
+2026-W42,device,2024,2024,hardest_share,4416813082.149648,difficulty,,160
+2026-W42,device,NerdAxeGamma/sv2,NerdAxeGamma/sv2,count_median,13.0,devices,,160
+2026-W42,device,NerdAxeGamma/sv2,NerdAxeGamma/sv2,hashrate_median,14078138253126,H/s,,160
+2026-W42,device,NerdAxeGamma/sv2,NerdAxeGamma/sv2,average_median,1052013136434,H/s,,160
+2026-W42,device,NerdAxeGamma/sv2,NerdAxeGamma/sv2,hardest_share,6517162444.28838,difficulty,,160
+2026-W42,device,whatsminer,whatsminer,count_median,13.0,devices,,160
+2026-W42,device,whatsminer,whatsminer,hashrate_median,1150732119610686,H/s,,160
+2026-W42,device,whatsminer,whatsminer,average_median,96464316369410,H/s,,160
+2026-W42,device,whatsminer,whatsminer,hardest_share,219968825543.95816,difficulty,,160
+2026-W42,device,Bitfortun,Bitfortun,count_median,12.0,devices,,160
+2026-W42,device,Bitfortun,Bitfortun,hashrate_median,60433917314954,H/s,,160
+2026-W42,device,Bitfortun,Bitfortun,average_median,5176360420752,H/s,,160
+2026-W42,device,Bitfortun,Bitfortun,hardest_share,54507316281.0951,difficulty,,160
+2026-W42,device,THOR,THOR,count_median,12.0,devices,,160
+2026-W42,device,THOR,THOR,hashrate_median,68059565404579,H/s,,160
+2026-W42,device,THOR,THOR,average_median,5563474969210,H/s,,160
+2026-W42,device,THOR,THOR,hardest_share,5217744585.96463,difficulty,,160
+2026-W42,device,2022,2022,count_median,10.0,devices,,160
+2026-W42,device,2022,2022,hashrate_median,68335395913554,H/s,,160
+2026-W42,device,2022,2022,average_median,6721233376423,H/s,,160
+2026-W42,device,2022,2022,hardest_share,6383867993.771888,difficulty,,160
+2026-W42,device,apollo,apollo,count_median,10.0,devices,,160
+2026-W42,device,apollo,apollo,hashrate_median,44712009635961,H/s,,160
+2026-W42,device,apollo,apollo,average_median,4655911792359,H/s,,160
+2026-W42,device,apollo,apollo,hardest_share,21118929448.74643,difficulty,,160
+2026-W42,device,Zyber8S,Zyber8S,count_median,8.0,devices,,160
+2026-W42,device,Zyber8S,Zyber8S,hashrate_median,41761779208968,H/s,,160
+2026-W42,device,Zyber8S,Zyber8S,average_median,5067101671219,H/s,,160
+2026-W42,device,Zyber8S,Zyber8S,hardest_share,7043117250.97726,difficulty,,160
+2026-W42,device,HarloLabs,HarloLabs,count_median,6.0,devices,,160
+2026-W42,device,HarloLabs,HarloLabs,hashrate_median,28584774447076,H/s,,160
+2026-W42,device,HarloLabs,HarloLabs,average_median,4625728391030,H/s,,160
+2026-W42,device,HarloLabs,HarloLabs,hardest_share,2667872307.209642,difficulty,,160
+2026-W42,device,Luckyaxe,Luckyaxe,count_median,6.0,devices,,160
+2026-W42,device,Luckyaxe,Luckyaxe,hashrate_median,33630802901333,H/s,,160
+2026-W42,device,Luckyaxe,Luckyaxe,average_median,5643454145138,H/s,,160
+2026-W42,device,Luckyaxe,Luckyaxe,hardest_share,5380114133.915238,difficulty,,160
+2026-W42,device,NerdQAxe++ TPS546/sv2,NerdQAxe++ TPS546/sv2,count_median,6.0,devices,,160
+2026-W42,device,NerdQAxe++ TPS546/sv2,NerdQAxe++ TPS546/sv2,hashrate_median,33607880148026,H/s,,160
+2026-W42,device,NerdQAxe++ TPS546/sv2,NerdQAxe++ TPS546/sv2,average_median,5495805218206,H/s,,160
+2026-W42,device,NerdQAxe++ TPS546/sv2,NerdQAxe++ TPS546/sv2,hardest_share,8440220469.400435,difficulty,,160
+2026-W42,device,Zyber8G,Zyber8G,count_median,6.0,devices,,160
+2026-W42,device,Zyber8G,Zyber8G,hashrate_median,46180069720168,H/s,,160
+2026-W42,device,Zyber8G,Zyber8G,average_median,7757607584494,H/s,,160
+2026-W42,device,Zyber8G,Zyber8G,hardest_share,2941352564.27978,difficulty,,160
+2026-W42,device,Magicminer,Magicminer,count_median,5.0,devices,,160
+2026-W42,device,Magicminer,Magicminer,hashrate_median,54572789089928,H/s,,160
+2026-W42,device,Magicminer,Magicminer,average_median,10950107120362,H/s,,160
+2026-W42,device,Magicminer,Magicminer,hardest_share,10976831464.001429,difficulty,,160
+2026-W42,device,NexusS1,NexusS1,count_median,5.0,devices,,160
+2026-W42,device,NexusS1,NexusS1,hashrate_median,58491036884078,H/s,,160
+2026-W42,device,NexusS1,NexusS1,average_median,11298084781345,H/s,,160
+2026-W42,device,NexusS1,NexusS1,hardest_share,14390386796.88802,difficulty,,160
+2026-W42,device,bmminer,bmminer,count_median,5.0,devices,,160
+2026-W42,device,bmminer,bmminer,hashrate_median,122504572792076,H/s,,160
+2026-W42,device,bmminer,bmminer,average_median,23830147129584,H/s,,160
+2026-W42,device,bmminer,bmminer,hardest_share,75193132879.90196,difficulty,,160
+2026-W42,device,NerdQX/sv2,NerdQX/sv2,count_median,4.0,devices,,160
+2026-W42,device,NerdQX/sv2,NerdQX/sv2,hashrate_median,27589895171401,H/s,,160
+2026-W42,device,NerdQX/sv2,NerdQX/sv2,average_median,7019887822885,H/s,,160
+2026-W42,device,NerdQX/sv2,NerdQX/sv2,hardest_share,80983214214.25945,difficulty,,160
+2026-W42,device,volc,volc,count_median,4.0,devices,,120
+2026-W42,device,volc,volc,hashrate_median,14429923663212,H/s,,120
+2026-W42,device,volc,volc,average_median,3762421655462,H/s,,120
+2026-W42,device,volc,volc,hardest_share,2672970174.415883,difficulty,,120
+2026-W42,device,NexusS1/sv2,NexusS1/sv2,count_median,3.0,devices,,116
+2026-W42,device,NexusS1/sv2,NexusS1/sv2,hashrate_median,33672747887012,H/s,,116
+2026-W42,device,NexusS1/sv2,NexusS1/sv2,average_median,13445422437022,H/s,,116
+2026-W42,device,NexusS1/sv2,NexusS1/sv2,hardest_share,23560110427.885616,difficulty,,116
+2026-W42,device,xminer,xminer,count_median,3.0,devices,,160
+2026-W42,device,xminer,xminer,hashrate_median,318469693455715,H/s,,160
+2026-W42,device,xminer,xminer,average_median,103574898736733,H/s,,160
+2026-W42,device,xminer,xminer,hardest_share,31341065960.36156,difficulty,,160
+2026-W42,device,NexusS1_2/sv2,NexusS1_2/sv2,count_median,2.0,devices,,160
+2026-W42,device,NexusS1_2/sv2,NexusS1_2/sv2,hashrate_median,20660518131244,H/s,,160
+2026-W42,device,NexusS1_2/sv2,NexusS1_2/sv2,average_median,10294233787996,H/s,,160
+2026-W42,device,NexusS1_2/sv2,NexusS1_2/sv2,hardest_share,2570258403.597071,difficulty,,160
+2026-W42,device,2021,2021,count_median,1.0,devices,,129
+2026-W42,device,2021,2021,hashrate_median,11773522416936,H/s,,129
+2026-W42,device,2021,2021,average_median,12358460696850,H/s,,129
+2026-W42,device,2021,2021,hardest_share,14914066360.031979,difficulty,,129
+2026-W42,device,2023,2023,count_median,1.0,devices,,151
+2026-W42,device,2023,2023,hashrate_median,19362490125128,H/s,,151
+2026-W42,device,2023,2023,average_median,19515074266135,H/s,,151
+2026-W42,device,2023,2023,hardest_share,4591538870.56998,difficulty,,151
+2026-W42,device,NiceHash,NiceHash,count_median,1.0,devices,,123
+2026-W42,device,NiceHash,NiceHash,hashrate_median,957466064322160,H/s,,123
+2026-W42,device,NiceHash,NiceHash,average_median,1022638525223160,H/s,,123
+2026-W42,device,NiceHash,NiceHash,hardest_share,1573849097013.5344,difficulty,,123
+2026-W42,device,B,B,count_median,0.0,devices,,37
+2026-W42,device,B,B,hashrate_median,0,H/s,,37
+2026-W42,device,B,B,average_median,10787862299350,H/s,,37
+2026-W42,device,B,B,hardest_share,1971190772.3142114,difficulty,,37
+2026-W42,device,Bitfortun BS-1/sv2,Bitfortun BS-1/sv2,count_median,0.0,devices,,1
+2026-W42,device,Bitfortun BS-1/sv2,Bitfortun BS-1/sv2,hashrate_median,0,H/s,,1
+2026-W42,device,Bitfortun BS-1/sv2,Bitfortun BS-1/sv2,average_median,3260352353889,H/s,,1
+2026-W42,device,Bitfortun BS-1/sv2,Bitfortun BS-1/sv2,hardest_share,101503184.46199699,difficulty,,1
+2026-W42,device,Bitfortun BS-2/sv2,Bitfortun BS-2/sv2,count_median,0.0,devices,,24
+2026-W42,device,Bitfortun BS-2/sv2,Bitfortun BS-2/sv2,hashrate_median,0,H/s,,24
+2026-W42,device,Bitfortun BS-2/sv2,Bitfortun BS-2/sv2,average_median,10279435895956,H/s,,24
+2026-W42,device,Bitfortun BS-2/sv2,Bitfortun BS-2/sv2,hardest_share,567134678.8556741,difficulty,,24
+2026-W42,device,Braiins,Braiins,count_median,0.0,devices,,22
+2026-W42,device,Braiins,Braiins,hashrate_median,0,H/s,,22
+2026-W42,device,Braiins,Braiins,average_median,695928970521038,H/s,,22
+2026-W42,device,Braiins,Braiins,hardest_share,8558267800.194011,difficulty,,22
+2026-W42,device,Braiins/sv2,Braiins/sv2,count_median,0.0,devices,,36
+2026-W42,device,Braiins/sv2,Braiins/sv2,hashrate_median,0,H/s,,36
+2026-W42,device,Braiins/sv2,Braiins/sv2,average_median,291902531732032,H/s,,36
+2026-W42,device,Braiins/sv2,Braiins/sv2,hardest_share,94728230302.02228,difficulty,,36
+2026-W42,device,FLUMINER,FLUMINER,count_median,0.0,devices,,50
+2026-W42,device,FLUMINER,FLUMINER,hashrate_median,0,H/s,,50
+2026-W42,device,FLUMINER,FLUMINER,average_median,73600283974304,H/s,,50
+2026-W42,device,FLUMINER,FLUMINER,hardest_share,1257025178.365586,difficulty,,50
+2026-W42,device,GMiner,GMiner,count_median,0.0,devices,,7
+2026-W42,device,GMiner,GMiner,hashrate_median,0,H/s,,7
+2026-W42,device,GMiner,GMiner,average_median,61968060636117,H/s,,7
+2026-W42,device,GMiner,GMiner,hardest_share,2360802544.670756,difficulty,,7
+2026-W42,device,MRR,MRR,count_median,0.0,devices,,28
+2026-W42,device,MRR,MRR,hashrate_median,0,H/s,,28
+2026-W42,device,MRR,MRR,average_median,995499408612802,H/s,,28
+2026-W42,device,MRR,MRR,hardest_share,645690287111.1667,difficulty,,28
+2026-W42,device,MaraFW,MaraFW,count_median,0.0,devices,,25
+2026-W42,device,MaraFW,MaraFW,hashrate_median,0,H/s,,25
+2026-W42,device,MaraFW,MaraFW,average_median,82416486014614,H/s,,25
+2026-W42,device,MaraFW,MaraFW,hardest_share,3425546384.1309156,difficulty,,25
+2026-W42,device,NMQAxe++,NMQAxe++,count_median,0.0,devices,,56
+2026-W42,device,NMQAxe++,NMQAxe++,hashrate_median,0,H/s,,56
+2026-W42,device,NMQAxe++,NMQAxe++,average_median,5077221882501,H/s,,56
+2026-W42,device,NMQAxe++,NMQAxe++,hardest_share,6623551139.867555,difficulty,,56
+2026-W42,device,NerdAxeGaia/sv2,NerdAxeGaia/sv2,count_median,0.0,devices,,17
+2026-W42,device,NerdAxeGaia/sv2,NerdAxeGaia/sv2,hashrate_median,0,H/s,,17
+2026-W42,device,NerdAxeGaia/sv2,NerdAxeGaia/sv2,average_median,2009344349679,H/s,,17
+2026-W42,device,NerdAxeGaia/sv2,NerdAxeGaia/sv2,hardest_share,1485726330.5239906,difficulty,,17
+2026-W42,device,NerdEKO,NerdEKO,count_median,0.0,devices,,2
+2026-W42,device,NerdEKO,NerdEKO,hashrate_median,0,H/s,,2
+2026-W42,device,NerdEKO,NerdEKO,average_median,16651312740704,H/s,,2
+2026-W42,device,NerdEKO,NerdEKO,hardest_share,90589423.00548619,difficulty,,2
+2026-W42,device,NerdHaxe,NerdHaxe,count_median,0.0,devices,,4
+2026-W42,device,NerdHaxe,NerdHaxe,hashrate_median,0,H/s,,4
+2026-W42,device,NerdHaxe,NerdHaxe,average_median,6122145912856,H/s,,4
+2026-W42,device,NerdHaxe,NerdHaxe,hardest_share,50267818.71822675,difficulty,,4
+2026-W42,device,NexusQX1,NexusQX1,count_median,0.0,devices,,48
+2026-W42,device,NexusQX1,NexusQX1,hashrate_median,0,H/s,,48
+2026-W42,device,NexusQX1,NexusQX1,average_median,8313143074913,H/s,,48
+2026-W42,device,NexusQX1,NexusQX1,hardest_share,112217173559.308,difficulty,,48
+2026-W42,device,NexusS1_1,NexusS1_1,count_median,0.0,devices,,73
+2026-W42,device,NexusS1_1,NexusS1_1,hashrate_median,0,H/s,,73
+2026-W42,device,NexusS1_1,NexusS1_1,average_median,5617671555302,H/s,,73
+2026-W42,device,NexusS1_1,NexusS1_1,hardest_share,2904908083.7413673,difficulty,,73
+2026-W42,device,NexusS1_2,NexusS1_2,count_median,0.0,devices,,76
+2026-W42,device,NexusS1_2,NexusS1_2,hashrate_median,0,H/s,,76
+2026-W42,device,NexusS1_2,NexusS1_2,average_median,11386799688004,H/s,,76
+2026-W42,device,NexusS1_2,NexusS1_2,hardest_share,8823719626.175184,difficulty,,76
+2026-W42,device,PowerPlay,PowerPlay,count_median,0.0,devices,,7
+2026-W42,device,PowerPlay,PowerPlay,hashrate_median,0,H/s,,7
+2026-W42,device,PowerPlay,PowerPlay,average_median,118594418481123,H/s,,7
+2026-W42,device,PowerPlay,PowerPlay,hardest_share,142700633653.23233,difficulty,,7
+2026-W42,device,YYSLUPING/sv2,YYSLUPING/sv2,count_median,0.0,devices,,1
+2026-W42,device,YYSLUPING/sv2,YYSLUPING/sv2,hashrate_median,0,H/s,,1
+2026-W42,device,YYSLUPING/sv2,YYSLUPING/sv2,average_median,5712102066054,H/s,,1
+2026-W42,device,YYSLUPING/sv2,YYSLUPING/sv2,hardest_share,21030492.965448808,difficulty,,1
+2026-W42,device,bdminer,bdminer,count_median,0.0,devices,,11
+2026-W42,device,bdminer,bdminer,hashrate_median,0,H/s,,11
+2026-W42,device,bdminer,bdminer,average_median,408052232838692,H/s,,11
+2026-W42,device,bdminer,bdminer,hardest_share,2184146217.1540403,difficulty,,11
+2026-W42,device,bitaxeHex,bitaxeHex,count_median,0.0,devices,,2
+2026-W42,device,bitaxeHex,bitaxeHex,hashrate_median,0,H/s,,2
+2026-W42,device,bitaxeHex,bitaxeHex,average_median,2690976190695,H/s,,2
+2026-W42,device,bitaxeHex,bitaxeHex,hardest_share,11676549624.36991,difficulty,,2
+2026-W42,device,bitdsk,bitdsk,count_median,0.0,devices,,64
+2026-W42,device,bitdsk,bitdsk,hashrate_median,0,H/s,,64
+2026-W42,device,bitdsk,bitdsk,average_median,179145212441,H/s,,64
+2026-W42,device,bitdsk,bitdsk,hardest_share,1269814578.1573966,difficulty,,64
+2026-W42,device,bixminer,bixminer,count_median,0.0,devices,,4
+2026-W42,device,bixminer,bixminer,hashrate_median,0,H/s,,4
+2026-W42,device,bixminer,bixminer,average_median,164882701248811,H/s,,4
+2026-W42,device,bixminer,bixminer,hardest_share,6116671243.465826,difficulty,,4
+2026-W42,device,fennel,fennel,count_median,0.0,devices,,1
+2026-W42,device,fennel,fennel,hashrate_median,0,H/s,,1
+2026-W42,device,fennel,fennel,average_median,5055428320499,H/s,,1
+2026-W42,device,fennel,fennel,hardest_share,148638043.9085942,difficulty,,1
+2026-W42,device,hbminer,hbminer,count_median,0.0,devices,,42
+2026-W42,device,hbminer,hbminer,hashrate_median,0,H/s,,42
+2026-W42,device,hbminer,hbminer,average_median,9215577593152,H/s,,42
+2026-W42,device,hbminer,hbminer,hardest_share,2665254567.3865523,difficulty,,42
+2026-W42,device,openmine,openmine,count_median,0.0,devices,,23
+2026-W42,device,openmine,openmine,hashrate_median,0,H/s,,23
+2026-W42,device,openmine,openmine,average_median,54323416821118,H/s,,23
+2026-W42,device,openmine,openmine,hardest_share,11803141591.253302,difficulty,,23
+2026-W42,device,unknown,unknown,count_median,0.0,devices,,3
+2026-W42,device,unknown,unknown,hashrate_median,0,H/s,,3
+2026-W42,device,unknown,unknown,average_median,5306878529606,H/s,,3
+2026-W42,device,unknown,unknown,hardest_share,43936217.98943529,difficulty,,3
+2026-W42,headline,solo_hashrate_hs,solo_hashrate_hs,solo_hashrate_hs,278439669270576501,H/s,week,
+2026-W42,headline,pools_in_sum,pools_in_sum,pools_in_sum,ckpool publicpool solopool atlaspool nerdminers-org nerdminer-io sololuck,,week,
+2026-W42,headline,bitaxe_count_median,bitaxe_count_median,bitaxe_count_median,16765.5,,week,
+2026-W42,headline,average_bitaxe_hs,average_bitaxe_hs,average_bitaxe_hs,1050148752147,H/s,week,
+2026-W42,headline,home_families,home_families,home_families,bitaxe NerdQAxe++,,week,
+2026-W42,headline,home_hashrate_hs,home_hashrate_hs,home_hashrate_hs,26935109661760236,H/s,week,
+2026-W42,headline,difficulty_median,difficulty_median,difficulty_median,132716002350731.3,,week,
+2026-W42,headline,network_hashrate_hs,network_hashrate_hs,network_hashrate_hs,950018149587083460608,H/s,week,
+2026-W42,headline,chance_home_block_month,chance_home_block_month,chance_home_block_month,0.116854,probability,week,
+2026-W42,headline,chance_is,chance_is,chance_is,lower bound,,week,
+2026-W42,headline,sololuck_bitcoin_blocks_published,sololuck_bitcoin_blocks_published,sololuck_bitcoin_blocks_published,0,,week,
